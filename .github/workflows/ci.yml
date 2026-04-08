@@ -105,7 +105,10 @@ jobs:
         # Ensure every expected output file was produced
         run: |
           for f in dist/index.mjs dist/index.cjs dist/index.d.ts \
-                   dist/preload.mjs dist/preload.cjs dist/preload.d.ts; do
+                   dist/preload.mjs dist/preload.cjs dist/preload.d.ts \
+                   dist/integrations.mjs dist/integrations.cjs dist/integrations.d.ts \
+                   dist/menus.mjs dist/menus.cjs dist/menus.d.ts \
+                   dist/appkit.mjs dist/appkit.cjs dist/appkit.d.ts; do
             [ -f "$f" ] || { echo "Missing: $f"; exit 1; }
           done
           echo "All dist artefacts present."

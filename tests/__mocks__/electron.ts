@@ -78,6 +78,13 @@ export const shell = {
   openPath: vi.fn(async () => ''),
 };
 
+// ─── Menu ─────────────────────────────────────────────────────────────────────
+
+export const Menu = {
+  buildFromTemplate: vi.fn((template: unknown) => ({ template })),
+  setApplicationMenu: vi.fn((_menu: unknown) => {}),
+};
+
 // ─── ipcRenderer ──────────────────────────────────────────────────────────────
 
 export const ipcRenderer = {

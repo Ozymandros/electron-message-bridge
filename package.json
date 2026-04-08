@@ -32,6 +32,16 @@
       "types": "./dist/integrations.d.ts",
       "import": "./dist/integrations.mjs",
       "require": "./dist/integrations.cjs"
+    },
+    "./menus": {
+      "types": "./dist/menus.d.ts",
+      "import": "./dist/menus.mjs",
+      "require": "./dist/menus.cjs"
+    },
+    "./appkit": {
+      "types": "./dist/appkit.d.ts",
+      "import": "./dist/appkit.mjs",
+      "require": "./dist/appkit.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -44,7 +54,8 @@
     "check": "eslint src/ tests/ && tsc --noEmit -p tsconfig.typecheck.json && vitest --typecheck run",
     "test": "vitest run",
     "check:all": "pnpm run check && pnpm run test:types && pnpm run test",
-    "coverage": "vitest run --coverage",
+    "check:all:coverage": "pnpm run check && pnpm run test:types && pnpm run test:coverage",
+    "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "test:types": "vitest --typecheck run",
     "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
@@ -53,7 +64,11 @@
   "peerDependencies": {
     "electron": ">=20.0.0"
   },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",

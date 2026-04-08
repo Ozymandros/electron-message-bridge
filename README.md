@@ -19,6 +19,8 @@ Full end-to-end type inference across main, preload, and renderer with no `any` 
 | `defineIpcEvents` | Define typed push events (main → renderer) |
 | `exposeEventsToRenderer` | Subscribe to push events with built-in cleanup |
 | `exposeValues` | Expose static read-only constants to the renderer |
+| `menus` subpath | Load declarative JSON/YAML menus and build Electron templates |
+| `appkit` subpath | Glue IPC + integrations + menus setup in one place |
 | `dispose()` | Remove all registered handlers from `ipcMain` |
 
 ---
@@ -250,6 +252,97 @@ interface Window {
   settingsApi: ExtractRendererApi<typeof settingsApi>;
   appEvents:   ExtractRendererEvents<typeof appEvents>;
 }
+```
+
+---
+
+## Declarative Menus (JSON/YAML)
+
+Use the optional menus module when you want to define Electron menus in config
+files and map menu actions to app callbacks.
+
+Example `config/menu.yaml`:
+
+```yaml
+items:
+  - label: File
+    submenu:
+      - label: Open...
+        accelerator: CmdOrCtrl+O
+        actionId: file.open
+      - type: separator
+      - role: quit
+  - label: Help
+    submenu:
+      - label: Documentation
+        actionId: help.docs
+```
+
+```ts
+import {
+  applyApplicationMenuFromFile,
+  buildMenuTemplate,
+  loadMenuSpecFromFile,
+} from 'electron-ipc-helper/menus';
+
+const spec = await loadMenuSpecFromFile('config/menu.yaml');
+
+const template = buildMenuTemplate(spec.items, {
+  onAction: (actionId) => {
+    if (actionId === 'file.open') {
+      // handle action
+    }
+  },
+});
+
+// Or do all steps at once:
+await applyApplicationMenuFromFile('config/menu.yaml', {
+  onAction: (actionId) => {
+    console.log('menu action:', actionId);
+  },
+});
+```
+
+---
+
+## AppKit (Optional Glue Layer)
+
+Use `electron-ipc-helper/appkit` when you want one setup flow that composes
+core IPC, optional integrations, and optional menus.
+
+```ts
+// main.ts
+import { setupMainAppKit } from 'electron-ipc-helper/appkit';
+
+const appkit = await setupMainAppKit({
+  apiHandlers: {
+    ping: async () => 'pong' as const,
+  },
+  eventSchema: {
+    ready: (_code: number) => {},
+  },
+  dialogs: true,
+  shell: true,
+  menu: {
+    filePath: 'config/menu.yaml',
+  },
+});
+
+// Later at shutdown/hot-reload
+appkit.dispose();
+```
+
+```ts
+// preload.ts
+import { setupPreloadAppKit } from 'electron-ipc-helper/appkit';
+
+setupPreloadAppKit({
+  api: appkit.api,
+  events: appkit.events,
+  values: { platform: process.platform },
+  dialogs: true,
+  shell: true,
+});
 ```
 
 ---
