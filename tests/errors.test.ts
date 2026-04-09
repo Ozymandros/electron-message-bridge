@@ -13,6 +13,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import {
   IpcHelperError,
   InvalidPayloadError,
+  InvalidBridgePayloadError,
   BridgeTimeoutError,
   MaxRestartsError,
   PluginConflictError,
@@ -21,6 +22,7 @@ import {
   AdapterMissingError,
   TransportError,
   ERR_INVALID_PAYLOAD,
+  ERR_INVALID_BRIDGE_PAYLOAD,
   ERR_BRIDGE_TIMEOUT,
   ERR_MAX_RESTARTS,
   ERR_PLUGIN_CONFLICT,
@@ -71,6 +73,7 @@ describe('IpcHelperError (base class)', () => {
     // Compile-time check — verifying the union at runtime
     const codes: IpcHelperErrorCode[] = [
       ERR_INVALID_PAYLOAD,
+      ERR_INVALID_BRIDGE_PAYLOAD,
       ERR_BRIDGE_TIMEOUT,
       ERR_MAX_RESTARTS,
       ERR_PLUGIN_CONFLICT,
@@ -79,7 +82,7 @@ describe('IpcHelperError (base class)', () => {
       ERR_ADAPTER_MISSING,
       ERR_TRANSPORT_FAILURE,
     ];
-    expect(codes).toHaveLength(8);
+    expect(codes).toHaveLength(9);
   });
 });
 
@@ -113,6 +116,39 @@ describe('InvalidPayloadError', () => {
   it('message mentions the channel name', () => {
     const err = new InvalidPayloadError('getUser');
     expect(err.message).toContain('"getUser"');
+  });
+});
+
+// ─── InvalidBridgePayloadError ────────────────────────────────────────────────
+
+describe('InvalidBridgePayloadError', () => {
+  it('is an IpcHelperError and an Error', () => {
+    const err = new InvalidBridgePayloadError('myContext');
+    expect(err).toBeInstanceOf(IpcHelperError);
+    expect(err).toBeInstanceOf(Error);
+  });
+
+  it('has code ERR_INVALID_BRIDGE_PAYLOAD', () => {
+    expect(new InvalidBridgePayloadError('ctx').code).toBe('ERR_INVALID_BRIDGE_PAYLOAD');
+  });
+
+  it('has name "InvalidBridgePayloadError"', () => {
+    expect(new InvalidBridgePayloadError('ctx').name).toBe('InvalidBridgePayloadError');
+  });
+
+  it('context record contains the provided context string', () => {
+    const err = new InvalidBridgePayloadError('saveSettings:input');
+    expect(err.context['context']).toBe('saveSettings:input');
+  });
+
+  it('defaults context to "(unknown)" when not provided', () => {
+    const err = new InvalidBridgePayloadError();
+    expect(err.context['context']).toBe('(unknown)');
+  });
+
+  it('message mentions the context location', () => {
+    const err = new InvalidBridgePayloadError('getUser:output');
+    expect(err.message).toContain('"getUser:output"');
   });
 });
 

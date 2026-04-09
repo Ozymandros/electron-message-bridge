@@ -108,6 +108,7 @@ export class WindowStatePlugin implements Plugin<WindowStateCapabilities> {
   private ctx: PluginContext | null = null;
 
   constructor(options: WindowStatePluginOptions) {
+    WindowStatePlugin.validateKey(options.key);
     this.key = options.key;
     this.defaultBounds = options.defaultBounds ?? { width: 1200, height: 800 };
     this.saveDebounceMs = options.saveDebounceMs ?? 300;
@@ -216,6 +217,15 @@ export class WindowStatePlugin implements Plugin<WindowStateCapabilities> {
 
   private stateFilePath(): string {
     return join(this.stateDir, `window-state-${this.key}.json`);
+  }
+
+  private static validateKey(key: string): void {
+    if (/[/\\:]/.test(key) || key.includes('..')) {
+      throw new Error(
+        `[electron-ipc-helper] WindowStatePlugin key "${key}" is invalid. ` +
+        `Keys must not contain path separators ('/', '\\\\'), colons (':'), or '..'.`,
+      );
+    }
   }
 
   private loadState(): WindowState {

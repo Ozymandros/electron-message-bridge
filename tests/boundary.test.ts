@@ -20,7 +20,7 @@ import {
   withBoundary,
 } from '../src/boundary.js';
 import type { BridgeSchema, JsonValue } from '../src/boundary.js';
-import { InvalidPayloadError } from '../src/errors.js';
+import { InvalidBridgePayloadError } from '../src/errors.js';
 
 // ─── isBridgePayload ──────────────────────────────────────────────────────────
 
@@ -177,6 +177,28 @@ describe('isBridgePayload', () => {
       })).toBe(false);
     });
   });
+
+  describe('Cyclic references (safe, returns false)', () => {
+    it('rejects a self-referencing object', () => {
+      const obj: Record<string, unknown> = {};
+      obj['self'] = obj;
+      expect(isBridgePayload(obj)).toBe(false);
+    });
+
+    it('rejects a self-referencing array', () => {
+      const arr: unknown[] = [];
+      arr.push(arr);
+      expect(isBridgePayload(arr)).toBe(false);
+    });
+
+    it('rejects a mutually-referencing pair of objects', () => {
+      const a: Record<string, unknown> = {};
+      const b: Record<string, unknown> = {};
+      a['b'] = b;
+      b['a'] = a;
+      expect(isBridgePayload(a)).toBe(false);
+    });
+  });
 });
 
 // ─── assertBridgePayload ──────────────────────────────────────────────────────
@@ -186,25 +208,25 @@ describe('assertBridgePayload', () => {
     expect(() => assertBridgePayload({ id: '123', count: 5 })).not.toThrow();
   });
 
-  it('throws InvalidPayloadError for undefined', () => {
-    expect(() => assertBridgePayload(undefined)).toThrow(InvalidPayloadError);
+  it('throws InvalidBridgePayloadError for undefined', () => {
+    expect(() => assertBridgePayload(undefined)).toThrow(InvalidBridgePayloadError);
   });
 
-  it('throws InvalidPayloadError for NaN', () => {
-    expect(() => assertBridgePayload(NaN)).toThrow(InvalidPayloadError);
+  it('throws InvalidBridgePayloadError for NaN', () => {
+    expect(() => assertBridgePayload(NaN)).toThrow(InvalidBridgePayloadError);
   });
 
-  it('throws InvalidPayloadError for Date instance', () => {
-    expect(() => assertBridgePayload(new Date())).toThrow(InvalidPayloadError);
+  it('throws InvalidBridgePayloadError for Date instance', () => {
+    expect(() => assertBridgePayload(new Date())).toThrow(InvalidBridgePayloadError);
   });
 
-  it('includes context in the thrown error channel field', () => {
+  it('includes context in the thrown error', () => {
     try {
       assertBridgePayload(undefined, 'getUser:input');
     } catch (err) {
-      expect(err).toBeInstanceOf(InvalidPayloadError);
-      if (err instanceof InvalidPayloadError) {
-        expect(err.channel).toBe('getUser:input');
+      expect(err).toBeInstanceOf(InvalidBridgePayloadError);
+      if (err instanceof InvalidBridgePayloadError) {
+        expect(err.context['context']).toBe('getUser:input');
       }
     }
   });
@@ -213,8 +235,8 @@ describe('assertBridgePayload', () => {
     try {
       assertBridgePayload(undefined);
     } catch (err) {
-      if (err instanceof InvalidPayloadError) {
-        expect(err.channel).toBe('(unknown)');
+      if (err instanceof InvalidBridgePayloadError) {
+        expect(err.context['context']).toBe('(unknown)');
       }
     }
   });

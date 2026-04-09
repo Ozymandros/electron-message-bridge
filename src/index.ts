@@ -22,6 +22,7 @@ export {
 export {
   IpcHelperError,
   InvalidPayloadError,
+  InvalidBridgePayloadError,
   BridgeTimeoutError,
   MaxRestartsError,
   PluginConflictError,
@@ -30,6 +31,7 @@ export {
   AdapterMissingError,
   TransportError,
   ERR_INVALID_PAYLOAD,
+  ERR_INVALID_BRIDGE_PAYLOAD,
   ERR_BRIDGE_TIMEOUT,
   ERR_MAX_RESTARTS,
   ERR_PLUGIN_CONFLICT,

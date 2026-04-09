@@ -77,7 +77,39 @@ describe('WindowStatePlugin: metadata', () => {
   });
 });
 
-// ─── getBounds ────────────────────────────────────────────────────────────────
+// ─── key validation ───────────────────────────────────────────────────────────
+
+describe('WindowStatePlugin: key validation', () => {
+  it('accepts a plain alphanumeric key', () => {
+    expect(() => new WindowStatePlugin({ key: 'mainWindow', stateDir: tmpDir })).not.toThrow();
+  });
+
+  it('accepts a key with hyphens and underscores', () => {
+    expect(() => new WindowStatePlugin({ key: 'main-window_1', stateDir: tmpDir })).not.toThrow();
+  });
+
+  it('rejects a key containing "/"', () => {
+    expect(() => new WindowStatePlugin({ key: 'foo/bar', stateDir: tmpDir })).toThrow(/invalid/i);
+  });
+
+  it('rejects a key containing "\\"', () => {
+    expect(() => new WindowStatePlugin({ key: 'foo\\bar', stateDir: tmpDir })).toThrow(/invalid/i);
+  });
+
+  it('rejects a key containing ":"', () => {
+    expect(() => new WindowStatePlugin({ key: 'C:drive', stateDir: tmpDir })).toThrow(/invalid/i);
+  });
+
+  it('rejects a key containing ".."', () => {
+    expect(() => new WindowStatePlugin({ key: '../secret', stateDir: tmpDir })).toThrow(/invalid/i);
+  });
+
+  it('rejects a key that is exactly ".."', () => {
+    expect(() => new WindowStatePlugin({ key: '..', stateDir: tmpDir })).toThrow(/invalid/i);
+  });
+});
+
+
 
 describe('WindowStatePlugin: getBounds', () => {
   it('returns defaultBounds when no state file exists', async () => {

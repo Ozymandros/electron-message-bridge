@@ -40,11 +40,38 @@ function valueExports(mod: Record<string, unknown>): string[] {
 describe('src/index — main process entry point', () => {
   it('exports exactly the expected symbols', () => {
     const exported = valueExports(mainIndex);
-    // Stable surface: defineIpcApi, defineIpcEvents
-    // Beta: ChildProcessLifecycle
-    expect(exported).toContain('defineIpcApi');
-    expect(exported).toContain('defineIpcEvents');
-    expect(exported).toContain('ChildProcessLifecycle');
+    expect(exported).toEqual([
+      'AdapterMissingError',
+      'BridgeTimeoutError',
+      'ChildProcessLifecycle',
+      'ERR_ADAPTER_MISSING',
+      'ERR_BRIDGE_TIMEOUT',
+      'ERR_EXPORT_MISSING',
+      'ERR_INVALID_BRIDGE_PAYLOAD',
+      'ERR_INVALID_PAYLOAD',
+      'ERR_MAX_RESTARTS',
+      'ERR_PLUGIN_CONFLICT',
+      'ERR_RUNTIME_MISSING',
+      'ERR_TRANSPORT_FAILURE',
+      'ExportMissingError',
+      'InvalidBridgePayloadError',
+      'InvalidPayloadError',
+      'IpcHelperError',
+      'MaxRestartsError',
+      'PROTOCOL_VERSION',
+      'PluginConflictError',
+      'RuntimeMissingError',
+      'TransportError',
+      'assertBridgePayload',
+      'defineIpcApi',
+      'defineIpcEvents',
+      'isBridgePayload',
+      'isNegotiablePlugin',
+      'negotiate',
+      'withBoundary',
+      'withOutputValidation',
+      'withValidation',
+    ]);
   });
 
   it('defineIpcApi is a function', () => {
@@ -65,12 +92,13 @@ describe('src/index — main process entry point', () => {
 describe('src/preload — preload script entry point', () => {
   it('exports exactly the expected symbols', () => {
     const exported = valueExports(preload);
-    expect(exported).toContain('exposeApiToRenderer');
-    expect(exported).toContain('exposeEventsToRenderer');
-    expect(exported).toContain('exposeValues');
-    // Compat re-exports from integrations
-    expect(exported).toContain('exposeDialogsToRenderer');
-    expect(exported).toContain('exposeShellToRenderer');
+    expect(exported).toEqual([
+      'exposeApiToRenderer',
+      'exposeDialogsToRenderer',
+      'exposeEventsToRenderer',
+      'exposeShellToRenderer',
+      'exposeValues',
+    ]);
   });
 
   it('all preload exports are functions', () => {
@@ -161,6 +189,7 @@ describe('src/index — error taxonomy exports', () => {
   const ERROR_CLASSES = [
     'IpcHelperError',
     'InvalidPayloadError',
+    'InvalidBridgePayloadError',
     'BridgeTimeoutError',
     'MaxRestartsError',
     'PluginConflictError',
@@ -172,6 +201,7 @@ describe('src/index — error taxonomy exports', () => {
 
   const ERROR_CODES = [
     'ERR_INVALID_PAYLOAD',
+    'ERR_INVALID_BRIDGE_PAYLOAD',
     'ERR_BRIDGE_TIMEOUT',
     'ERR_MAX_RESTARTS',
     'ERR_PLUGIN_CONFLICT',
@@ -227,14 +257,18 @@ describe('src/lifecycle — child process lifecycle helpers', () => {
 
 describe('src/boundary — bridge payload contracts', () => {
   const BOUNDARY_FNS = [
-    'isBridgePayload',
     'assertBridgePayload',
-    'withValidation',
-    'withOutputValidation',
+    'isBridgePayload',
     'withBoundary',
+    'withOutputValidation',
+    'withValidation',
   ] as const;
 
-  it('exports all boundary functions', () => {
+  it('exports exactly the expected symbols', () => {
+    expect(valueExports(boundary)).toEqual(BOUNDARY_FNS);
+  });
+
+  it('all boundary exports are functions', () => {
     for (const name of BOUNDARY_FNS) {
       expect(typeof (boundary as Record<string, unknown>)[name], `${name} should be a function`).toBe('function');
     }

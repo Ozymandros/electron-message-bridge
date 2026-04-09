@@ -40,6 +40,7 @@
 // ─── Error code literals ──────────────────────────────────────────────────────
 
 export const ERR_INVALID_PAYLOAD   = 'ERR_INVALID_PAYLOAD'   as const;
+export const ERR_INVALID_BRIDGE_PAYLOAD = 'ERR_INVALID_BRIDGE_PAYLOAD' as const;
 export const ERR_BRIDGE_TIMEOUT    = 'ERR_BRIDGE_TIMEOUT'    as const;
 export const ERR_MAX_RESTARTS      = 'ERR_MAX_RESTARTS'      as const;
 export const ERR_PLUGIN_CONFLICT   = 'ERR_PLUGIN_CONFLICT'   as const;
@@ -62,6 +63,7 @@ export const ERR_TRANSPORT_FAILURE = 'ERR_TRANSPORT_FAILURE' as const;
  */
 export type IpcHelperErrorCode =
   | typeof ERR_INVALID_PAYLOAD
+  | typeof ERR_INVALID_BRIDGE_PAYLOAD
   | typeof ERR_BRIDGE_TIMEOUT
   | typeof ERR_MAX_RESTARTS
   | typeof ERR_PLUGIN_CONFLICT
@@ -123,6 +125,27 @@ export class InvalidPayloadError extends IpcHelperError {
     );
     this.name = 'InvalidPayloadError';
     this.channel = channel;
+  }
+}
+
+/**
+ * Thrown when a value passed to `assertBridgePayload` is not JSON-serialisable.
+ *
+ * @example
+ * ```ts
+ * assertBridgePayload(new Date(), 'saveSettings:input');
+ * // → InvalidBridgePayloadError: Value at "saveSettings:input" is not a valid BridgePayload.
+ * ```
+ */
+export class InvalidBridgePayloadError extends IpcHelperError {
+  constructor(context?: string) {
+    const where = context ?? '(unknown)';
+    super(
+      ERR_INVALID_BRIDGE_PAYLOAD,
+      `[electron-ipc-helper] Value at "${where}" is not a valid BridgePayload (must be JSON-serialisable).`,
+      { context: where },
+    );
+    this.name = 'InvalidBridgePayloadError';
   }
 }
 

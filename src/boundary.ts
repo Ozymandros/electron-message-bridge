@@ -53,7 +53,7 @@
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
  */
 
-import { InvalidPayloadError } from './errors.js';
+import { InvalidBridgePayloadError } from './errors.js';
 
 // ─── JSON / Bridge type hierarchy ─────────────────────────────────────────────
 
@@ -117,6 +117,10 @@ export type BridgePayload = JsonValue;
  * ```
  */
 export function isBridgePayload(value: unknown): value is BridgePayload {
+  return isBridgePayloadInner(value, new WeakSet<object>());
+}
+
+function isBridgePayloadInner(value: unknown, seen: WeakSet<object>): boolean {
   if (value === null) return true;
 
   switch (typeof value) {
@@ -129,15 +133,19 @@ export function isBridgePayload(value: unknown): value is BridgePayload {
       return Number.isFinite(value);
 
     case 'object': {
+      // Detect cyclic references — return false rather than infinite-recurse
+      if (seen.has(value as object)) return false;
+      seen.add(value as object);
+
       if (Array.isArray(value)) {
-        return value.every(isBridgePayload);
+        return value.every(el => isBridgePayloadInner(el, seen));
       }
 
       // Only accept plain objects — reject Date, RegExp, Map, Set, etc.
       const proto = Object.getPrototypeOf(value) as unknown;
       if (proto !== Object.prototype && proto !== null) return false;
 
-      return Object.values(value as Record<string, unknown>).every(isBridgePayload);
+      return Object.values(value as Record<string, unknown>).every(v => isBridgePayloadInner(v, seen));
     }
 
     default:
@@ -149,8 +157,8 @@ export function isBridgePayload(value: unknown): value is BridgePayload {
 /**
  * Asserts that `value` is a JSON-serialisable {@link BridgePayload}.
  *
- * Throws {@link InvalidPayloadError} if not. The optional `context` string is
- * included in the error's `context` object for structured logging.
+ * Throws {@link InvalidBridgePayloadError} if not. The optional `context` string
+ * is included in the error message and its `context` record for structured logging.
  *
  * @example
  * ```ts
@@ -158,15 +166,14 @@ export function isBridgePayload(value: unknown): value is BridgePayload {
  * // body is now typed as BridgePayload
  * ```
  *
- * @throws {InvalidPayloadError}
+ * @throws {InvalidBridgePayloadError}
  */
 export function assertBridgePayload(
   value: unknown,
   context?: string,
 ): asserts value is BridgePayload {
   if (!isBridgePayload(value)) {
-    const channel = context ?? '(unknown)';
-    throw new InvalidPayloadError(channel);
+    throw new InvalidBridgePayloadError(context);
   }
 }
 
