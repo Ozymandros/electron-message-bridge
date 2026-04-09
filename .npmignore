@@ -5,3 +5,9 @@ tsconfig.json
 tsup.config.ts
 vitest.config.ts
 *.map
+
+obj/
+bin/
+nuget/
+packages/
+*.tgz

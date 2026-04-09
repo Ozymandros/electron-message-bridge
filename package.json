@@ -95,13 +95,15 @@
     "test:watch": "vitest",
     "test:types": "vitest --typecheck run",
     "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "pack:all": "pnpm run build && pnpm --dir packages/adapter-assemblyscript run build && pnpm pack && pnpm --dir packages/adapter-assemblyscript pack --pack-destination ../..",
+    "pack:nupkg": "pnpm run build && pnpm --dir packages/adapter-assemblyscript run build && node scripts/nuget-pack.mjs"
   },
   "peerDependencies": {
     "electron": ">=20.0.0"
   },
   "optionalDependencies": {
-    "@electron-ipc-helper/adapter-assemblyscript": "workspace:*"
+    "@electron-ipc-helper/adapter-assemblyscript": "^0.1.0"
   },
   "dependencies": {
     "js-yaml": "^4.1.0"

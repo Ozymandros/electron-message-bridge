@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>electron-ipc-helper</id>
+    <version>0.1.0</version>
+    <title>electron-ipc-helper</title>
+    <authors>electron-ipc-helper contributors</authors>
+    <description>Typed Electron IPC helper (JavaScript/TypeScript). Primary distribution is npm; this package bundles the built dist/ tree for NuGet folder feeds.</description>
+    <license type="expression">MIT</license>
+    <readme>README.md</readme>
+    <tags>electron ipc typescript nodejs</tags>
+  </metadata>
+  <files>
+    <file src="..\..\dist\**\*" target="dist" />
+    <file src="..\..\README.md" target="README.md" />
+  </files>
+</package>

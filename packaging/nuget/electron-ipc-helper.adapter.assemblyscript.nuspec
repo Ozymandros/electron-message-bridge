@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>electron-ipc-helper.adapter.assemblyscript</id>
+    <version>0.1.0</version>
+    <title>electron-ipc-helper.adapter.assemblyscript</title>
+    <authors>electron-ipc-helper contributors</authors>
+    <description>Optional AssemblyScript / WASM adapter for electron-ipc-helper. Primary distribution is npm; this package bundles dist/ for NuGet folder feeds.</description>
+    <license type="expression">MIT</license>
+    <readme>README.md</readme>
+    <tags>electron ipc assemblyscript wasm typescript nodejs</tags>
+  </metadata>
+  <files>
+    <file src="..\..\packages\adapter-assemblyscript\dist\**\*" target="dist" />
+    <file src="..\..\packages\adapter-assemblyscript\README.md" target="README.md" />
+  </files>
+</package>
