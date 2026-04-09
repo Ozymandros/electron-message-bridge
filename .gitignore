@@ -8,3 +8,4 @@ obj/
 bin/
 packages/
 *.tgz
+.pnpm-store
