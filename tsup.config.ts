@@ -8,6 +8,11 @@ export default defineConfig({
     menus: 'src/menus.ts',
     appkit: 'src/appkit.ts',
     lifecycle: 'src/lifecycle.ts',
+    plugins: 'src/plugins.ts',
+    'plugins/window-state': 'src/plugins/window-state.ts',
+    'plugins/diagnostics': 'src/plugins/diagnostics.ts',
+    'plugins/updater': 'src/plugins/updater.ts',
+    'adapters/assemblyscript': 'src/adapters/assemblyscript.ts',
   },
   format: ['esm', 'cjs'],
   outExtension: ({ format }) => ({ js: format === 'esm' ? '.mjs' : '.cjs' }),
@@ -16,6 +21,6 @@ export default defineConfig({
   sourcemap: true,
   splitting: false,
   treeshake: true,
-  // electron is always an external peer — never bundle it
-  external: ['electron'],
+  // electron and the adapter package are always externals — never bundle them
+  external: ['electron', '@electron-ipc-helper/adapter-assemblyscript'],
 });

@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   # ──────────────────────────────────────────────────────
-  # Job 1 — Static checks (lint + typecheck)
+  # Job 1 — Static checks (lint + typecheck + type tests)
   # Fast-feedback job. Runs in parallel with `test`.
   # ──────────────────────────────────────────────────────
   check:
@@ -38,8 +38,9 @@ jobs:
         run: pnpm run check
 
   # ──────────────────────────────────────────────────────
-  # Job 2 — Tests
+  # Job 2 — Tests + Coverage enforcement
   # Run on the full supported Node matrix.
+  # Coverage is enforced via Vitest thresholds (80%).
   # ──────────────────────────────────────────────────────
   test:
     name: Test (Node ${{ matrix.node-version }})
@@ -64,13 +65,48 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: pnpm test
+      - name: Run tests with coverage
+        run: pnpm run test:coverage
+
+      - name: Upload coverage report (Node 20 only)
+        if: matrix.node-version == 20
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
 
   # ──────────────────────────────────────────────────────
-  # Job 3 — Build
-  # Ensures the library actually compiles to dist/.
-  # Runs after both check and test pass.
+  # Job 3 — Dependency security audit
+  # Fails if any high/critical vulnerabilities are found.
+  # ──────────────────────────────────────────────────────
+  audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit dependencies
+        # --audit-level high fails only on high/critical vulnerabilities
+        run: pnpm audit --audit-level high
+
+  # ──────────────────────────────────────────────────────
+  # Job 4 — Build + Artifact Verification
+  # Ensures the library compiles and all dist files exist.
+  # Runs after check and test pass.
   # ──────────────────────────────────────────────────────
   build:
     name: Build
@@ -96,14 +132,68 @@ jobs:
         run: pnpm run build
 
       - name: Verify dist artefacts
-        # Ensure every expected output file was produced
         run: |
-          for f in dist/index.mjs dist/index.cjs dist/index.d.ts \
-                   dist/preload.mjs dist/preload.cjs dist/preload.d.ts \
-                   dist/integrations.mjs dist/integrations.cjs dist/integrations.d.ts \
-                   dist/menus.mjs dist/menus.cjs dist/menus.d.ts \
-                   dist/appkit.mjs dist/appkit.cjs dist/appkit.d.ts \
-                   dist/lifecycle.mjs dist/lifecycle.cjs dist/lifecycle.d.ts; do
-            [ -f "$f" ] || { echo "Missing: $f"; exit 1; }
+          MISSING=0
+          for f in \
+            dist/index.mjs dist/index.cjs dist/index.d.ts \
+            dist/preload.mjs dist/preload.cjs dist/preload.d.ts \
+            dist/integrations.mjs dist/integrations.cjs dist/integrations.d.ts \
+            dist/menus.mjs dist/menus.cjs dist/menus.d.ts \
+            dist/appkit.mjs dist/appkit.cjs dist/appkit.d.ts \
+            dist/lifecycle.mjs dist/lifecycle.cjs dist/lifecycle.d.ts \
+            dist/plugins.mjs dist/plugins.cjs dist/plugins.d.ts \
+            dist/plugins/window-state.mjs dist/plugins/window-state.cjs \
+            dist/plugins/diagnostics.mjs dist/plugins/diagnostics.cjs \
+            dist/plugins/updater.mjs dist/plugins/updater.cjs; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing dist artefact: $f"
+              MISSING=1
+            fi
           done
+          if [ "$MISSING" -eq 1 ]; then exit 1; fi
           echo "All dist artefacts present."
+
+      - name: Check dist file sizes (budget gate)
+        run: |
+          # Ensure no single entry point exceeds 50 KB (uncompressed)
+          BUDGET_BYTES=51200
+          FAIL=0
+          for f in dist/*.mjs dist/plugins/*.mjs; do
+            SIZE=$(wc -c < "$f")
+            if [ "$SIZE" -gt "$BUDGET_BYTES" ]; then
+              echo "::warning::$f exceeds size budget: ${SIZE} bytes (budget: ${BUDGET_BYTES})"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            echo "::error::One or more dist files exceed the size budget. Review bundle output."
+            exit 1
+          fi
+          echo "All dist files within size budget."
+
+  # ──────────────────────────────────────────────────────
+  # Job 5 — API Surface Regression Check
+  # Runs the api-surface tests to catch breaking changes.
+  # ──────────────────────────────────────────────────────
+  api-surface:
+    name: API Surface Check
+    runs-on: ubuntu-latest
+    needs: [check]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run API surface tests
+        run: pnpm vitest run tests/api-surface.test.ts

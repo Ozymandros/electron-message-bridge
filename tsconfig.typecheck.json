@@ -1,7 +1,22 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    // Add DOM lib so WebAssembly types (Memory, Instance, Module, etc.) are available.
+    // This is required because the AssemblyScript adapter uses WebAssembly APIs.
+    // The DOM lib does not conflict with Node.js-only code in --noEmit mode.
+    "lib": ["ES2020", "DOM"],
+    "rootDir": ".",
+    "paths": {
+      // Resolve the adapter package to its source during type-checking
+      // (in the real workspace, pnpm workspace links handle this at runtime)
+      "@electron-ipc-helper/adapter-assemblyscript": [
+        "./packages/adapter-assemblyscript/src/index.ts"
+      ],
+      // Resolve electron-ipc-helper sub-paths for the adapter package's own imports
+      "electron-ipc-helper": ["./src/index.ts"],
+      "electron-ipc-helper/plugins": ["./src/plugins.ts"]
+    }
   },
   "include": ["src", "tests"],
   "exclude": ["node_modules", "dist", "examples"]

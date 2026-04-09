@@ -1,0 +1,53 @@
+{
+  "name": "@electron-ipc-helper/adapter-assemblyscript",
+  "version": "0.1.0",
+  "description": "Optional AssemblyScript / WebAssembly adapter for electron-ipc-helper. Bridges WASM exports into typed IPC handlers.",
+  "keywords": [
+    "electron",
+    "ipc",
+    "assemblyscript",
+    "wasm",
+    "webassembly",
+    "typescript",
+    "electron-ipc-helper"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "clean": "rimraf dist"
+  },
+  "peerDependencies": {
+    "electron": ">=20.0.0",
+    "electron-ipc-helper": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "electron": "^32.0.0",
+    "electron-ipc-helper": "workspace:*",
+    "rimraf": "^5.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}

@@ -1,0 +1,89 @@
+name: RFC — Request for Comments
+description: Propose a significant change to electron-ipc-helper
+labels: ["rfc", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        An RFC is required for changes to Stable APIs, new modules, or significant
+        architectural changes. See [CONTRIBUTING.md](../CONTRIBUTING.md) for the full process.
+
+  - type: input
+    id: title
+    attributes:
+      label: RFC title
+      placeholder: e.g. Add streaming IPC support
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: |
+        Why is this change needed? What problem does it solve?
+        What is the current behavior and what is missing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed design
+      description: |
+        Describe the proposed API changes or new features.
+        Include TypeScript signatures, usage examples, and architecture notes.
+      placeholder: |
+        ```ts
+        // New export from 'electron-ipc-helper'
+        export function defineStreamingApi<T extends ApiHandlers>(handlers: T): StreamingApi<T>;
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What other approaches did you consider? Why are they inferior?
+    validations:
+      required: true
+
+  - type: textarea
+    id: breaking-changes
+    attributes:
+      label: Breaking changes
+      description: |
+        Does this RFC introduce breaking changes?
+        Which Stable/Beta/Experimental APIs are affected?
+        What is the migration path?
+    validations:
+      required: true
+
+  - type: textarea
+    id: drawbacks
+    attributes:
+      label: Drawbacks
+      description: What are the downsides of this proposal?
+    validations:
+      required: false
+
+  - type: textarea
+    id: open-questions
+    attributes:
+      label: Open questions
+      description: What aspects of this RFC are still unresolved?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have read the CONTRIBUTING.md RFC process.
+          required: true
+        - label: This RFC affects a Stable API surface (required for RFC).
+          required: false
+        - label: I am prepared to implement this RFC if accepted.
+          required: false

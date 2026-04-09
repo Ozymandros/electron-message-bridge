@@ -47,6 +47,31 @@
       "types": "./dist/lifecycle.d.ts",
       "import": "./dist/lifecycle.mjs",
       "require": "./dist/lifecycle.cjs"
+    },
+    "./plugins": {
+      "types": "./dist/plugins.d.ts",
+      "import": "./dist/plugins.mjs",
+      "require": "./dist/plugins.cjs"
+    },
+    "./plugins/window-state": {
+      "types": "./dist/plugins/window-state.d.ts",
+      "import": "./dist/plugins/window-state.mjs",
+      "require": "./dist/plugins/window-state.cjs"
+    },
+    "./plugins/diagnostics": {
+      "types": "./dist/plugins/diagnostics.d.ts",
+      "import": "./dist/plugins/diagnostics.mjs",
+      "require": "./dist/plugins/diagnostics.cjs"
+    },
+    "./plugins/updater": {
+      "types": "./dist/plugins/updater.d.ts",
+      "import": "./dist/plugins/updater.mjs",
+      "require": "./dist/plugins/updater.cjs"
+    },
+    "./adapters/assemblyscript": {
+      "types": "./dist/adapters/assemblyscript.d.ts",
+      "import": "./dist/adapters/assemblyscript.mjs",
+      "require": "./dist/adapters/assemblyscript.cjs"
     }
   },
   "main": "./dist/index.cjs",
@@ -68,6 +93,9 @@
   },
   "peerDependencies": {
     "electron": ">=20.0.0"
+  },
+  "optionalDependencies": {
+    "@electron-ipc-helper/adapter-assemblyscript": "workspace:*"
   },
   "dependencies": {
     "js-yaml": "^4.1.0"

@@ -1,0 +1,95 @@
+name: Bug Report
+description: Report a bug in electron-ipc-helper
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill in as much detail as possible.
+
+  - type: input
+    id: version
+    attributes:
+      label: electron-ipc-helper version
+      placeholder: e.g. 0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: electron-version
+    attributes:
+      label: Electron version
+      placeholder: e.g. 32.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      placeholder: e.g. 20.11.0
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: e.g. macOS 14, Windows 11, Ubuntu 22.04
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps to reproduce the issue.
+      placeholder: |
+        1. Call `defineIpcApi({ ... })`
+        2. Call `exposeApiToRenderer(...)`
+        3. In renderer call `window.api.myHandler()`
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened? Include error messages and stack traces.
+    validations:
+      required: true
+
+  - type: textarea
+    id: minimal-repro
+    attributes:
+      label: Minimal reproduction
+      description: |
+        A minimal code snippet or GitHub repo link that reproduces the issue.
+        This significantly speeds up triaging.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues and this is not a duplicate.
+          required: true
+        - label: I have included a minimal reproduction.
+          required: false
