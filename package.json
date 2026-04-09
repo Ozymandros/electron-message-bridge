@@ -68,6 +68,16 @@
       "import": "./dist/plugins/updater.mjs",
       "require": "./dist/plugins/updater.cjs"
     },
+    "./boundary": {
+      "types": "./dist/boundary.d.ts",
+      "import": "./dist/boundary.mjs",
+      "require": "./dist/boundary.cjs"
+    },
+    "./adapters/loader": {
+      "types": "./dist/adapters/loader.d.ts",
+      "import": "./dist/adapters/loader.mjs",
+      "require": "./dist/adapters/loader.cjs"
+    },
     "./adapters/assemblyscript": {
       "types": "./dist/adapters/assemblyscript.d.ts",
       "import": "./dist/adapters/assemblyscript.mjs",

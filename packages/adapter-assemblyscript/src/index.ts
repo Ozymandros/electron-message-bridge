@@ -71,7 +71,7 @@
 
 import { readFile } from 'node:fs/promises';
 import type { ApiHandlers } from 'electron-ipc-helper';
-import { ExportMissingError } from 'electron-ipc-helper';
+import { ExportMissingError, RuntimeMissingError } from 'electron-ipc-helper';
 
 // ─── Value type descriptors ───────────────────────────────────────────────────
 
@@ -286,8 +286,7 @@ function encodeArg(
 
     case 'string': {
       if (runtime === null) {
-        logger.warn('[@electron-ipc-helper/adapter-assemblyscript] Cannot encode string: runtime helpers not available. Passing 0.');
-        return 0;
+        throw new RuntimeMissingError(['__newString', '__pin']);
       }
       const str = String(value);
       const ptr = runtime.__newString(str);
@@ -298,8 +297,7 @@ function encodeArg(
 
     case 'bytes': {
       if (runtime === null) {
-        logger.warn('[@electron-ipc-helper/adapter-assemblyscript] Cannot encode bytes: runtime helpers not available. Passing 0.');
-        return 0;
+        throw new RuntimeMissingError(['__newArrayBuffer', '__pin']);
       }
       const buf = value instanceof Uint8Array
         ? value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength) as ArrayBuffer
@@ -339,16 +337,14 @@ function decodeResult(
 
     case 'string': {
       if (runtime === null) {
-        logger.warn('[@electron-ipc-helper/adapter-assemblyscript] Cannot decode string: runtime not available.');
-        return '';
+        throw new RuntimeMissingError(['__getString']);
       }
       return runtime.__getString(raw as number);
     }
 
     case 'bytes': {
       if (runtime === null) {
-        logger.warn('[@electron-ipc-helper/adapter-assemblyscript] Cannot decode bytes: runtime not available.');
-        return new Uint8Array(0);
+        throw new RuntimeMissingError(['__getArrayBuffer']);
       }
       return new Uint8Array(runtime.__getArrayBuffer(raw as number));
     }

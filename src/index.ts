@@ -42,6 +42,23 @@ export {
 export type { IpcHelperErrorCode } from './errors.js';
 
 export {
+  isBridgePayload,
+  assertBridgePayload,
+  withValidation,
+  withOutputValidation,
+  withBoundary,
+} from './boundary.js';
+
+export type {
+  JsonPrimitive,
+  JsonArray,
+  JsonObject,
+  JsonValue,
+  BridgePayload,
+  BridgeSchema,
+} from './boundary.js';
+
+export {
   ChildProcessLifecycle,
 } from './lifecycle.js';
 

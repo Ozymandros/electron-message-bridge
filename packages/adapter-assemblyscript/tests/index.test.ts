@@ -8,7 +8,7 @@
  * Coverage areas:
  * - Primitive type encoding / decoding (i32, u32, i64, f32, f64, bool)
  * - Managed type encoding / decoding (string, bytes) with mock runtime
- * - Missing-runtime warning and graceful fallback
+ * - Missing-runtime: throws RuntimeMissingError when managed types are used without runtime
  * - Missing export handler (throws at call time)
  * - `asc.fn` schema shorthand
  * - `wrapLoaderInstance` compatibility shim
@@ -251,18 +251,29 @@ describe('createAssemblyScriptAdapter: missing runtime', () => {
     expect(logger.warn).not.toHaveBeenCalled();
   });
 
-  it('string encoding falls back and warns when runtime is missing', async () => {
-    const logger = silentLogger();
+  it('throws RuntimeMissingError when encoding a string arg without runtime', async () => {
     const fn = vi.fn((_ptr: number) => 0);
     const instance = fakeInstance({ greet: fn });
 
     const adapter = await createAssemblyScriptAdapter(instance, {
       greet: asc.fn(['string'], 'string'),
-    }, { warnOnMissingRuntime: false, logger });
+    }, { warnOnMissingRuntime: false, logger: silentLogger() });
 
-    await adapter.handlers.greet('hello');
-    expect(logger.warn).toHaveBeenCalledWith(
-      expect.stringContaining('Cannot encode string'),
+    await expect(adapter.handlers.greet('hello')).rejects.toThrow(
+      /RuntimeMissingError|runtime exports/i,
+    );
+  });
+
+  it('throws RuntimeMissingError when encoding bytes without runtime', async () => {
+    const fn = vi.fn((_ptr: number) => 0);
+    const instance = fakeInstance({ process: fn });
+
+    const adapter = await createAssemblyScriptAdapter(instance, {
+      process: asc.fn(['bytes'], 'bytes'),
+    }, { warnOnMissingRuntime: false, logger: silentLogger() });
+
+    await expect(adapter.handlers.process(new Uint8Array([1, 2, 3]))).rejects.toThrow(
+      /RuntimeMissingError|runtime exports/i,
     );
   });
 });
