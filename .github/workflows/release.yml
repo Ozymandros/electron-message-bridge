@@ -81,7 +81,7 @@ jobs:
       - name: Check adapter publish availability
         id: adapter_publish_check
         run: |
-          ADAPTER_INFO=$(node -e "const fs=require('node:fs');const path=require('node:path');const pkgPath=path.join(process.cwd(),'packages','adapter-assemblyscript','package.json');const pkg=JSON.parse(fs.readFileSync(pkgPath,'utf8'));process.stdout.write(`${pkg.name}@${pkg.version}`)")
+          ADAPTER_INFO=$(node -e 'const fs=require("node:fs");const path=require("node:path");const pkgPath=path.join(process.cwd(),"packages","adapter-assemblyscript","package.json");const pkg=JSON.parse(fs.readFileSync(pkgPath,"utf8"));process.stdout.write(pkg.name+"@"+pkg.version)')
           if npm view "${ADAPTER_INFO}" version >/dev/null 2>&1; then
             echo "adapter_already_published=true" >> "$GITHUB_OUTPUT"
             echo "${ADAPTER_INFO} is already published. Skipping adapter publish."
@@ -124,8 +124,8 @@ jobs:
 
       - name: Verify adapter publish availability
         run: |
-          node -e "const fs=require('node:fs');const path=require('node:path');const pkgPath=path.join(process.cwd(),'packages','adapter-assemblyscript','package.json');const pkg=JSON.parse(fs.readFileSync(pkgPath,'utf8'));console.log(`${pkg.name}@${pkg.version}`)"
-          ADAPTER_VERSION=$(node -e "const fs=require('node:fs');const path=require('node:path');const pkgPath=path.join(process.cwd(),'packages','adapter-assemblyscript','package.json');const pkg=JSON.parse(fs.readFileSync(pkgPath,'utf8'));process.stdout.write(pkg.version)")
+          node -e 'const fs=require("node:fs");const path=require("node:path");const pkgPath=path.join(process.cwd(),"packages","adapter-assemblyscript","package.json");const pkg=JSON.parse(fs.readFileSync(pkgPath,"utf8"));console.log(pkg.name+"@"+pkg.version)'
+          ADAPTER_VERSION=$(node -e 'const fs=require("node:fs");const path=require("node:path");const pkgPath=path.join(process.cwd(),"packages","adapter-assemblyscript","package.json");const pkg=JSON.parse(fs.readFileSync(pkgPath,"utf8"));process.stdout.write(pkg.version)')
           PACKAGE_NAME="@electron-ipc-helper/adapter-assemblyscript@${ADAPTER_VERSION}"
           MAX_ATTEMPTS=10
 
@@ -148,7 +148,7 @@ jobs:
       - name: Check main package publish availability
         id: main_publish_check
         run: |
-          MAIN_INFO=$(node -e "const fs=require('node:fs');const path=require('node:path');const pkgPath=path.join(process.cwd(),'package.json');const pkg=JSON.parse(fs.readFileSync(pkgPath,'utf8'));process.stdout.write(`${pkg.name}@${pkg.version}`)")
+          MAIN_INFO=$(node -e 'const fs=require("node:fs");const path=require("node:path");const pkgPath=path.join(process.cwd(),"package.json");const pkg=JSON.parse(fs.readFileSync(pkgPath,"utf8"));process.stdout.write(pkg.name+"@"+pkg.version)')
           if npm view "${MAIN_INFO}" version >/dev/null 2>&1; then
             echo "main_already_published=true" >> "$GITHUB_OUTPUT"
             echo "${MAIN_INFO} is already published. Skipping main publish."
