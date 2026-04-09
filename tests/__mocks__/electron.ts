@@ -76,6 +76,15 @@ export const Menu = {
   setApplicationMenu: vi.fn((_menu: unknown) => {}),
 };
 
+// ─── app ──────────────────────────────────────────────────────────────────────
+
+export const app = {
+  getPath: vi.fn((name: string) => {
+    if (name === 'userData') return process.cwd();
+    return process.cwd();
+  }),
+};
+
 // ─── ipcRenderer ──────────────────────────────────────────────────────────────
 
 export const ipcRenderer = {

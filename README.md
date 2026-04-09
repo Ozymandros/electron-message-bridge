@@ -37,6 +37,8 @@ Use only what you need:
 
 Nothing outside the core is required.
 
+For optional adapters (for example AssemblyScript), install the adapter package directly.
+
 ### Perfect for…
 
 - New Electron apps that want a clean, maintainable IPC layer from day one.  
@@ -75,6 +77,32 @@ pnpm add electron-ipc-helper
 ```
 
 `electron` must be installed separately as a peer dependency.
+
+---
+
+## Docker integration mock (optional)
+
+This repo ships a lightweight backend mock image for integration testing.
+
+```bash
+pnpm run docker:mock:up
+```
+
+The mock service listens on `http://localhost:4010`.
+
+Stop and clean up:
+
+```bash
+pnpm run docker:mock:down
+```
+
+Full details: `docs/docker-integration.md`.
+
+Run the integration suite:
+
+```bash
+pnpm run test:integration
+```
 
 ---
 

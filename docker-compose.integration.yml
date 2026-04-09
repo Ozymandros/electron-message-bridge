@@ -1,0 +1,16 @@
+services:
+  mock-backend:
+    build:
+      context: ./docker/mock-backend
+    image: electron-ipc-helper/mock-backend:local
+    container_name: electron-ipc-helper-mock-backend
+    environment:
+      PORT: 4010
+    ports:
+      - "4010:4010"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4010/health"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+      start_period: 3s

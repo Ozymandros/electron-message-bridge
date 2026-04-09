@@ -5,7 +5,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mkdtempSync, rmSync, existsSync, readFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { WindowStatePlugin } from '../src/plugins/window-state.js';
@@ -229,6 +229,17 @@ describe('WindowStatePlugin: stop and dispose', () => {
     await p.init(silentCtx());
     await expect(p.stop(silentCtx())).resolves.toBeUndefined();
   });
+
+  it('stop calls saveNow when a window is attached', async () => {
+    const p = new WindowStatePlugin({ key: 'stop-save', stateDir: tmpDir, saveDebounceMs: 500 });
+    await p.init(silentCtx());
+    const win = makeWindow({ x: 1, y: 2, width: 640, height: 480 });
+    p.attach(win);
+    win.trigger('resize');
+    await p.stop(silentCtx());
+
+    expect(existsSync(join(tmpDir, 'window-state-stop-save.json'))).toBe(true);
+  });
 });
 
 // ─── state file format ────────────────────────────────────────────────────────
@@ -252,7 +263,6 @@ describe('WindowStatePlugin: state file format', () => {
   });
 
   it('handles corrupt state file gracefully (falls back to defaults)', async () => {
-    const { writeFileSync } = await import('node:fs');
     writeFileSync(join(tmpDir, 'window-state-corrupt.json'), 'not-json!!', 'utf-8');
 
     const p = new WindowStatePlugin({
@@ -266,7 +276,6 @@ describe('WindowStatePlugin: state file format', () => {
   });
 
   it('handles state file with missing width/height (falls back to defaults)', async () => {
-    const { writeFileSync } = await import('node:fs');
     writeFileSync(join(tmpDir, 'window-state-partial.json'), JSON.stringify({ x: 0, y: 0 }), 'utf-8');
 
     const p = new WindowStatePlugin({
@@ -277,5 +286,39 @@ describe('WindowStatePlugin: state file format', () => {
     await p.init(silentCtx());
 
     expect(p.getBounds()).toMatchObject({ width: 1024, height: 768 });
+  });
+
+  it('logs an error when saving fails while persisting state', async () => {
+    const logger = { log: vi.fn(), warn: vi.fn(), error: vi.fn() };
+    const invalidStateDir = join(tmpDir, 'not-a-directory.txt');
+    writeFileSync(invalidStateDir, 'blocking dir creation', 'utf-8');
+
+    const p = new WindowStatePlugin({ key: 'persist-error', stateDir: invalidStateDir });
+    await p.init({ name: 'window-state', logger });
+    const win = makeWindow();
+    p.attach(win);
+    win.trigger('close');
+
+    expect(logger.error).toHaveBeenCalledWith(
+      'Failed to persist window state:',
+      expect.anything(),
+    );
+  });
+
+  it('logs an error when reading window bounds fails', async () => {
+    const logger = { log: vi.fn(), warn: vi.fn(), error: vi.fn() };
+    const p = new WindowStatePlugin({ key: 'save-error', stateDir: tmpDir });
+    await p.init({ name: 'window-state', logger });
+    const win = makeWindow();
+    const failingWin = {
+      ...win,
+      getBounds: () => {
+      throw new Error('bounds-failed');
+      },
+    };
+    p.attach(failingWin);
+    win.trigger('close');
+
+    expect(logger.error).toHaveBeenCalledWith('Failed to save window state:', expect.any(Error));
   });
 });

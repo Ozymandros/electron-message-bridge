@@ -467,6 +467,40 @@ describe('UpdaterPlugin', () => {
     expect(logger.warn).toHaveBeenCalled();
   });
 
+  it('starts periodic checks when checkIntervalMs is enabled and stops them on stop()', async () => {
+    vi.useFakeTimers();
+    const engine = makeEngine();
+    const p = new UpdaterPlugin({ engine, checkIntervalMs: 50 });
+    const ctx = { name: 'updater', logger: silentLogger() };
+    p.init(ctx);
+    p.start(ctx);
+
+    await vi.advanceTimersByTimeAsync(160);
+    expect(engine.checkForUpdatesAndNotify).toHaveBeenCalledTimes(3);
+
+    await p.stop(ctx);
+    await vi.advanceTimersByTimeAsync(160);
+    expect(engine.checkForUpdatesAndNotify).toHaveBeenCalledTimes(3);
+
+    vi.useRealTimers();
+  });
+
+  it('dispose clears context so event handlers can run safely after dispose', () => {
+    const logger = silentLogger();
+    const engine = makeEngine();
+    const onUpdateNotAvailable = vi.fn();
+    const p = new UpdaterPlugin({ engine, onUpdateNotAvailable });
+    const ctx = { name: 'updater', logger };
+    p.init(ctx);
+    p.start(ctx);
+    p.dispose(ctx);
+
+    engine.emit('update-not-available');
+
+    expect(onUpdateNotAvailable).toHaveBeenCalledTimes(1);
+    expect(logger.log).not.toHaveBeenCalledWith('No update available');
+  });
+
   it('check() normalizes non-Error throws and calls onError', async () => {
     const onError = vi.fn();
     const engine: UpdaterEngine = {
