@@ -107,7 +107,23 @@ jobs:
         run: |
           node -e "const fs=require('node:fs');const path=require('node:path');const pkgPath=path.join(process.cwd(),'packages','adapter-assemblyscript','package.json');const pkg=JSON.parse(fs.readFileSync(pkgPath,'utf8'));console.log(`${pkg.name}@${pkg.version}`)"
           ADAPTER_VERSION=$(node -e "const fs=require('node:fs');const path=require('node:path');const pkgPath=path.join(process.cwd(),'packages','adapter-assemblyscript','package.json');const pkg=JSON.parse(fs.readFileSync(pkgPath,'utf8'));process.stdout.write(pkg.version)")
-          npm view "@electron-ipc-helper/adapter-assemblyscript@${ADAPTER_VERSION}" version
+          PACKAGE_NAME="@electron-ipc-helper/adapter-assemblyscript@${ADAPTER_VERSION}"
+          MAX_ATTEMPTS=10
+
+          for attempt in $(seq 1 "${MAX_ATTEMPTS}"); do
+            if npm view "${PACKAGE_NAME}" version; then
+              exit 0
+            fi
+
+            if [ "${attempt}" -eq "${MAX_ATTEMPTS}" ]; then
+              echo "Package ${PACKAGE_NAME} was not available in the npm registry after ${MAX_ATTEMPTS} attempts." >&2
+              exit 1
+            fi
+
+            sleep_seconds=$((attempt * 5))
+            echo "Package ${PACKAGE_NAME} is not visible yet. Retrying in ${sleep_seconds}s (attempt ${attempt}/${MAX_ATTEMPTS})..."
+            sleep "${sleep_seconds}"
+          done
         shell: bash
 
       - name: Publish package
