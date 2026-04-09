@@ -21,7 +21,7 @@ import * as menus from '../src/menus.js';
 import * as lifecycle from '../src/lifecycle.js';
 import * as boundary from '../src/boundary.js';
 import * as adapterLoader from '../src/adapters/loader.js';
-// The shim re-exports from @electron-message-bridge/adapter-assemblyscript;
+// The shim re-exports from electron-message-bridge-adapter-assemblyscript;
 // we import the shim here to verify the re-export surface is intact.
 import * as ascAdapter from '../src/adapters/assemblyscript.js';
 

@@ -291,7 +291,7 @@ export class RuntimeMissingError extends IpcHelperError {
  * @example
  * ```ts
  * // Trying to use AssemblyScript adapter without installing the package
- * // → AdapterMissingError: Adapter "@electron-message-bridge/adapter-assemblyscript" is not available.
+ * // → AdapterMissingError: Adapter "electron-message-bridge-adapter-assemblyscript" is not available.
  * ```
  */
 export class AdapterMissingError extends IpcHelperError {

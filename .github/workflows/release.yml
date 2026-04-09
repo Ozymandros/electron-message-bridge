@@ -7,6 +7,10 @@ on:
         description: Type "publish" to confirm manual publish
         required: true
         default: "no"
+      npm_otp:
+        description: Optional npm OTP (required if token cannot bypass 2FA)
+        required: false
+        default: ""
   release:
     types: [published]
 
@@ -54,6 +58,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: validate
     if: github.event_name == 'release' || github.event.inputs.confirm_publish == 'publish'
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_OTP: ${{ github.event.inputs.npm_otp }}
 
     steps:
       - name: Checkout
@@ -81,6 +88,7 @@ jobs:
       - name: Publish adapters
         run: |
           ADAPTER_INFO=$(node -e 'const fs=require("node:fs");const path=require("node:path");const pkgPath=path.join(process.cwd(),"packages","adapter-assemblyscript","package.json");const pkg=JSON.parse(fs.readFileSync(pkgPath,"utf8"));process.stdout.write(pkg.name+"@"+pkg.version)')
+          echo "Adapter info: ${ADAPTER_INFO}"
           if npm view "${ADAPTER_INFO}" version >/dev/null 2>&1; then
             echo "${ADAPTER_INFO} is already published. Skipping adapter publish."
             exit 0
@@ -88,19 +96,33 @@ jobs:
 
           echo "pnpm version: $(pnpm --version)"
           echo "npm version: $(npm --version)"
+          npm whoami --registry=https://registry.npmjs.org
 
           pushd packages/adapter-assemblyscript
-          pnpm publish --access public --no-git-checks --provenance --registry=https://registry.npmjs.org
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
+            echo "NODE_AUTH_TOKEN is empty — cannot publish." >&2
+            exit 1
+          fi
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          PUBLISH_ARGS="--access public --no-git-checks --registry=https://registry.npmjs.org"
+          if [ "${GITHUB_ACTIONS}" = "true" ]; then
+            PUBLISH_ARGS="${PUBLISH_ARGS} --provenance"
+          fi
+          if [ -n "${NPM_OTP}" ]; then
+            PUBLISH_ARGS="${PUBLISH_ARGS} --otp=${NPM_OTP}"
+          fi
+          pnpm publish ${PUBLISH_ARGS}
           popd
         shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-main:
     name: Publish main package
     runs-on: ubuntu-latest
     needs: publish-adapters
     if: github.event_name == 'release' || github.event.inputs.confirm_publish == 'publish'
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_OTP: ${{ github.event.inputs.npm_otp }}
 
     steps:
       - name: Checkout
@@ -124,9 +146,8 @@ jobs:
 
       - name: Verify adapter publish availability
         run: |
-          node -e 'const fs=require("node:fs");const path=require("node:path");const pkgPath=path.join(process.cwd(),"packages","adapter-assemblyscript","package.json");const pkg=JSON.parse(fs.readFileSync(pkgPath,"utf8"));console.log(pkg.name+"@"+pkg.version)'
-          ADAPTER_VERSION=$(node -e 'const fs=require("node:fs");const path=require("node:path");const pkgPath=path.join(process.cwd(),"packages","adapter-assemblyscript","package.json");const pkg=JSON.parse(fs.readFileSync(pkgPath,"utf8"));process.stdout.write(pkg.version)')
-          PACKAGE_NAME="@electron-message-bridge/adapter-assemblyscript@${ADAPTER_VERSION}"
+          PACKAGE_NAME=$(node -e 'const fs=require("node:fs");const path=require("node:path");const pkgPath=path.join(process.cwd(),"packages","adapter-assemblyscript","package.json");const pkg=JSON.parse(fs.readFileSync(pkgPath,"utf8"));process.stdout.write(pkg.name+"@"+pkg.version)')
+          echo "${PACKAGE_NAME}"
           MAX_ATTEMPTS=10
 
           for attempt in $(seq 1 "${MAX_ATTEMPTS}"); do
@@ -159,6 +180,13 @@ jobs:
 
       - name: Publish package
         if: steps.main_publish_check.outputs.main_already_published != 'true'
-        run: pnpm publish --access public --no-git-checks --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm whoami --registry=https://registry.npmjs.org
+          PUBLISH_ARGS="--access public --no-git-checks"
+          if [ "${GITHUB_ACTIONS}" = "true" ]; then
+            PUBLISH_ARGS="${PUBLISH_ARGS} --provenance"
+          fi
+          if [ -n "${NPM_OTP}" ]; then
+            PUBLISH_ARGS="${PUBLISH_ARGS} --otp=${NPM_OTP}"
+          fi
+          pnpm publish ${PUBLISH_ARGS}

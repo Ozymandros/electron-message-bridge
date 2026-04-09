@@ -2,7 +2,7 @@
  * Shim compatibility test for `electron-message-bridge/adapters/assemblyscript`.
  *
  * The AssemblyScript adapter implementation has moved to the standalone
- * package `@electron-message-bridge/adapter-assemblyscript`. The core package
+ * package `electron-message-bridge-adapter-assemblyscript`. The core package
  * retains a thin deprecated re-export shim for one transition release.
  *
  * These tests verify that:

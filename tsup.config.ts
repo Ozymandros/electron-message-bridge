@@ -24,5 +24,5 @@ export default defineConfig({
   splitting: false,
   treeshake: true,
   // electron and the adapter package are always externals — never bundle them
-  external: ['electron', '@electron-message-bridge/adapter-assemblyscript'],
+  external: ['electron', 'electron-message-bridge-adapter-assemblyscript'],
 });

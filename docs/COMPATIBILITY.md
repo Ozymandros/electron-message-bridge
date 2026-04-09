@@ -80,7 +80,7 @@ The following are **not** breaking changes:
 | **0.x** (current) | ≥ 20.0 | ≥ 18 LTS | ≥ 5.0 | Active |
 | **1.x** (planned) | ≥ 28.0 | ≥ 20 LTS | ≥ 5.4 | Planned |
 
-### Adapter: `@electron-message-bridge/adapter-assemblyscript`
+### Adapter: `electron-message-bridge-adapter-assemblyscript`
 
 | adapter version | core peer | Node.js | AssemblyScript | AS Loader | Status |
 |---|---|---|---|---|---|
