@@ -79,7 +79,7 @@ export const PROTOCOL_VERSION = 1 as const;
 export interface AdapterManifest {
   /**
    * Fully-qualified adapter package name.
-   * @example `'@electron-message-bridge/adapter-assemblyscript'`
+   * @example `'electron-message-bridge-adapter-assemblyscript'`
    */
   readonly name: string;
 

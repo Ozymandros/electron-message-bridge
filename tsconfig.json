@@ -5,7 +5,7 @@
     "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
-      "@electron-message-bridge/adapter-assemblyscript": [
+      "electron-message-bridge-adapter-assemblyscript": [
         "./packages/adapter-assemblyscript/src/index.ts"
       ],
       "electron-message-bridge": ["./src/index.ts"],

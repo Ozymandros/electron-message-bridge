@@ -7,7 +7,7 @@ Step-by-step guides for migrating to electron-message-bridge from bare Electron 
 ## Migrating AssemblyScript adapter to standalone package (v0.1.x → v0.2.x)
 
 The AssemblyScript / WASM adapter has been extracted from the core package into
-the standalone package **`@electron-message-bridge/adapter-assemblyscript`**. This
+the standalone package **`electron-message-bridge-adapter-assemblyscript`**. This
 keeps the core bundle lean for the majority of users who don't need WASM.
 
 ### Why this change?
@@ -20,13 +20,13 @@ keeps the core bundle lean for the majority of users who don't need WASM.
 
 ```bash
 # npm
-npm install @electron-message-bridge/adapter-assemblyscript
+npm install electron-message-bridge-adapter-assemblyscript
 
 # pnpm
-pnpm add @electron-message-bridge/adapter-assemblyscript
+pnpm add electron-message-bridge-adapter-assemblyscript
 
 # yarn
-yarn add @electron-message-bridge/adapter-assemblyscript
+yarn add electron-message-bridge-adapter-assemblyscript
 ```
 
 ### Step 2 — Update your imports
@@ -44,7 +44,7 @@ import {
   createAssemblyScriptAdapter,
   AssemblyScriptPlugin,
   asc,
-} from '@electron-message-bridge/adapter-assemblyscript';
+} from 'electron-message-bridge-adapter-assemblyscript';
 ```
 
 No API changes — the function signatures, types, and behaviour are identical.

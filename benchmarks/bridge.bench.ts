@@ -103,7 +103,7 @@ const FlatObjectSchema: BridgeSchema<typeof FLAT_OBJECT_PAYLOAD> = {
 
 // Benchmark manifest (reused across negotiation benches)
 const SAMPLE_MANIFEST: AdapterManifest = {
-  name: '@electron-message-bridge/adapter-assemblyscript',
+  name: 'electron-message-bridge-adapter-assemblyscript',
   version: '0.1.0',
   protocolVersion: 1,
   supportsBinary: true,
