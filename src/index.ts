@@ -42,6 +42,19 @@ export {
 export type { IpcHelperErrorCode } from './errors.js';
 
 export {
+  negotiate,
+  isNegotiablePlugin,
+  PROTOCOL_VERSION,
+} from './negotiation.js';
+
+export type {
+  AdapterManifest,
+  CapabilityRequirements,
+  NegotiationResult,
+  NegotiablePlugin,
+} from './negotiation.js';
+
+export {
   isBridgePayload,
   assertBridgePayload,
   withValidation,

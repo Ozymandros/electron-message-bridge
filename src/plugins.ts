@@ -54,6 +54,26 @@
 
 import { PluginConflictError } from './errors.js';
 export { PluginConflictError } from './errors.js';
+import {
+  negotiate,
+  isNegotiablePlugin,
+} from './negotiation.js';
+import type {
+  AdapterManifest,
+  CapabilityRequirements,
+  NegotiationResult,
+} from './negotiation.js';
+export type {
+  AdapterManifest,
+  CapabilityRequirements,
+  NegotiationResult,
+  NegotiablePlugin,
+} from './negotiation.js';
+export {
+  negotiate,
+  isNegotiablePlugin,
+  PROTOCOL_VERSION,
+} from './negotiation.js';
 
 // ─── Public interfaces ────────────────────────────────────────────────────────
 
@@ -130,6 +150,32 @@ export interface PluginHostOptions {
    * @param hook   - The lifecycle hook that threw (`init`, `start`, `stop`, `dispose`).
    */
   onError?: (error: Error, plugin: string, hook: PluginHook) => void;
+
+  /**
+   * Minimum capability requirements enforced during the pre-`init` negotiation
+   * handshake.
+   *
+   * Plugins that implement {@link NegotiablePlugin} (`getManifest()`) will have
+   * their manifests compared against these requirements before `init()` runs.
+   * Plugins that do not implement `NegotiablePlugin` are unaffected.
+   *
+   * Hard mismatches (protocol version, required binary/streaming) are logged as
+   * warnings. The plugin's `init()` hook still runs — the host never silently
+   * skips a plugin. Use {@link PluginHost.getNegotiationResult} to inspect the
+   * outcome and react in your own code.
+   *
+   * @example
+   * ```ts
+   * const host = new PluginHost({
+   *   requirements: {
+   *     minProtocolVersion: 1,
+   *     requiresBinary: true,
+   *     minPayloadBytes: 4 * 1024 * 1024, // 4 MB
+   *   },
+   * });
+   * ```
+   */
+  requirements?: CapabilityRequirements;
 }
 
 /** The four lifecycle hook names. */
@@ -169,9 +215,15 @@ export class PluginHost {
   private readonly capabilityOwners = new Map<string, string>();
   private readonly logger: Pick<Console, 'log' | 'warn' | 'error'>;
   private readonly onError: NonNullable<PluginHostOptions['onError']>;
+  private readonly requirements: CapabilityRequirements;
+  private readonly negotiationResults = new Map<
+    string,
+    NegotiationResult
+  >();
 
   constructor(options: PluginHostOptions = {}) {
     this.logger = options.logger ?? console;
+    this.requirements = options.requirements ?? {};
     this.onError = options.onError ?? ((error, plugin, hook) => {
       this.logger.error(
         `[electron-ipc-helper] Plugin "${plugin}" threw during "${hook}": ${error.message}`,
@@ -225,12 +277,45 @@ export class PluginHost {
   }
 
   /**
+   * Returns the {@link NegotiationResult} for the named plugin, or `undefined`
+   * if the plugin did not implement {@link NegotiablePlugin} or has not yet
+   * been through the `init()` negotiation phase.
+   *
+   * @example
+   * ```ts
+   * await host.init();
+   * const result = host.getNegotiationResult('assemblyscript:math');
+   * if (result && !result.accepted) {
+   *   console.error('Adapter capability mismatch:', result.rejections);
+   * }
+   * ```
+   */
+  getNegotiationResult(pluginName: string): NegotiationResult | undefined {
+    return this.negotiationResults.get(pluginName);
+  }
+
+  /**
+   * Returns a snapshot of all negotiation results keyed by plugin name.
+   * Only plugins that implement {@link NegotiablePlugin} appear in this map.
+   */
+  getAllNegotiationResults(): ReadonlyMap<string, NegotiationResult> {
+    return new Map(this.negotiationResults);
+  }
+
+  /**
    * Calls `init` on all plugins in registration order.
    *
-   * Errors are isolated: a failing plugin's `init` does not prevent others
-   * from initializing.
+   * Before running `init` hooks, the host performs the capability negotiation
+   * handshake for every plugin that implements {@link NegotiablePlugin}
+   * (`getManifest()`). Results are stored and accessible via
+   * {@link getNegotiationResult}. Negotiation failures are logged as warnings
+   * but do not prevent `init()` from running — the caller decides how to react.
+   *
+   * Errors from individual `init` hooks are isolated: a failing plugin does not
+   * prevent others from initialising.
    */
   async init(): Promise<void> {
+    await this.runNegotiation();
     await this.runHook('init', this.plugins);
   }
 
@@ -256,6 +341,51 @@ export class PluginHost {
   }
 
   // ─── Internal ─────────────────────────────────────────────────────────────
+
+  /**
+   * Runs the capability negotiation handshake for all plugins that implement
+   * {@link NegotiablePlugin}. Results are stored in `this.negotiationResults`.
+   *
+   * This is deliberately non-throwing: if `getManifest()` itself throws, the
+   * error is caught, logged, and execution continues for the remaining plugins.
+   */
+  private async runNegotiation(): Promise<void> {
+    for (const plugin of this.plugins) {
+      if (!isNegotiablePlugin(plugin)) continue;
+
+      let manifest: AdapterManifest;
+      try {
+        manifest = await plugin.getManifest();
+      } catch (err: unknown) {
+        const e = err instanceof Error ? err : new Error(String(err));
+        this.logger.warn(
+          `[electron-ipc-helper] Plugin "${plugin.name}" getManifest() threw: ${e.message}`,
+        );
+        continue;
+      }
+
+      const result = negotiate(manifest, this.requirements);
+      this.negotiationResults.set(plugin.name, result);
+
+      if (!result.accepted) {
+        this.logger.warn(
+          `[electron-ipc-helper] Plugin "${plugin.name}" failed capability negotiation:`,
+          result.rejections.join(' | '),
+        );
+      }
+
+      for (const warning of result.warnings) {
+        this.logger.warn(`[electron-ipc-helper] [negotiate:${plugin.name}] ${warning}`);
+      }
+
+      if (result.accepted && result.warnings.length === 0) {
+        this.logger.log(
+          `[electron-ipc-helper] Plugin "${plugin.name}" negotiation accepted ` +
+          `(protocol v${result.effectiveCapabilities.protocolVersion}).`,
+        );
+      }
+    }
+  }
 
   private makeContext(plugin: Plugin): PluginContext {
     const name = plugin.name;

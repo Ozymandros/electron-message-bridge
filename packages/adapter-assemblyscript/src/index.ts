@@ -72,6 +72,12 @@
 import { readFile } from 'node:fs/promises';
 import type { ApiHandlers } from 'electron-ipc-helper';
 import { ExportMissingError, RuntimeMissingError } from 'electron-ipc-helper';
+import type { NegotiablePlugin, AdapterManifest } from 'electron-ipc-helper/plugins';
+import { PROTOCOL_VERSION } from 'electron-ipc-helper/plugins';
+
+/** @internal Package manifest values for capability negotiation. */
+const ADAPTER_NAME    = '@electron-ipc-helper/adapter-assemblyscript' as const;
+const ADAPTER_VERSION = '0.1.0' as const;
 
 // ─── Value type descriptors ───────────────────────────────────────────────────
 
@@ -650,7 +656,8 @@ export interface AssemblyScriptPluginOptions<S extends AscSchema> {
  * await host.start();
  * ```
  */
-export class AssemblyScriptPlugin<S extends AscSchema> implements Plugin<AssemblyScriptCapabilities> {
+export class AssemblyScriptPlugin<S extends AscSchema>
+  implements Plugin<AssemblyScriptCapabilities>, NegotiablePlugin {
   readonly name: string;
   readonly capabilities: Record<string, true>;
 
@@ -662,6 +669,32 @@ export class AssemblyScriptPlugin<S extends AscSchema> implements Plugin<Assembl
     this.opts = opts;
     this.name = `assemblyscript:${opts.name}`;
     this.capabilities = { [`assemblyscript:${opts.name}`]: true };
+  }
+
+  /**
+   * Returns the adapter's capability manifest for the pre-`init` handshake.
+   *
+   * The manifest is static — it does not depend on the WASM module being loaded
+   * yet. The `capabilities.managedMemory` field is always `true` because the
+   * adapter supports it when the module exports the runtime helpers. The actual
+   * availability is determined at load time.
+   */
+  getManifest(): AdapterManifest {
+    return {
+      name: ADAPTER_NAME,
+      version: ADAPTER_VERSION,
+      protocolVersion: PROTOCOL_VERSION,
+      supportsBinary: true,
+      supportsStreaming: false,
+      // maxPayloadBytes omitted — no adapter-level cap; limited by Node.js heap / Electron IPC
+      capabilities: {
+        wasmRuntime: 'assemblyscript',
+        // Managed memory (strings, bytes) requires the --exportRuntime flag;
+        // declared as supported here because the adapter handles both modes.
+        managedMemory: true,
+        schemaKeys: Object.keys(this.opts.schema),
+      },
+    };
   }
 
   async init(ctx: PluginContext): Promise<void> {
