@@ -112,9 +112,6 @@
   "peerDependencies": {
     "electron": ">=20.0.0"
   },
-  "optionalDependencies": {
-    "@electron-ipc-helper/adapter-assemblyscript": "^0.1.0"
-  },
   "dependencies": {
     "js-yaml": "^4.1.0"
   },

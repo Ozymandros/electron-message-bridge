@@ -32,9 +32,12 @@ import { requireAdapter } from './loader.js';
 const PACKAGE = '@electron-ipc-helper/adapter-assemblyscript';
 
 // ─── Type-only re-exports ─────────────────────────────────────────────────────
-// These are erased at runtime (zero cost). They allow consumers who import
-// from this shim to keep their TypeScript types working during the migration
-// window, without needing to install the standalone package first.
+// These are erased at runtime (zero cost). They allow consumers who already
+// have the package installed to get full type inference from this shim.
+// NOTE: TypeScript still resolves this module at type-check time, so
+// @electron-ipc-helper/adapter-assemblyscript must be installed for types to
+// work. Use `loadAssemblyScriptAdapter()` below for the graceful runtime path
+// when the package may be absent.
 export type * from '@electron-ipc-helper/adapter-assemblyscript';
 
 // ─── Lazy dynamic loader ──────────────────────────────────────────────────────
