@@ -3,11 +3,6 @@
     "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "baseUrl": ".",
-    "paths": {
-      "electron-ipc-helper": ["../../src/index.ts"],
-      "electron-ipc-helper/plugins": ["../../src/plugins.ts"]
-    },
     "lib": ["ES2020", "DOM"],
     "forceConsistentCasingInFileNames": true,
     "strict": true,
