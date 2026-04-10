@@ -45,6 +45,40 @@ Skip or defer this migration when all are true:
 
 ---
 
+## Minimal mode first (recommended for tiny apps)
+
+If your current priority is fewer lines right now, start with manual Electron IPC and defer full migration.
+
+Use this quick decision rule:
+
+- Stay manual when you have 1 to 2 request handlers and 0 to 1 push events.
+- Plan migration when you reach about 3+ request handlers or 2+ push events.
+- Migrate sooner if your app must run in both Electron and web contexts.
+
+### Minimal mode checklist
+
+1. Keep current `ipcMain.handle` and preload exposure.
+2. Keep channel names consistent and centrally documented.
+3. Add tests around your highest-risk channels before scaling.
+4. Re-evaluate migration once the channel count grows.
+
+### Why this exists
+
+- The bridge adds an upfront structure cost.
+- Small apps may not recover that cost immediately.
+- As channel count grows, repeated manual wiring usually becomes the bigger maintenance cost.
+
+### Minimal mode exit criteria
+
+Move from manual IPC to this playbook when one or more are true:
+
+- You are duplicating channel string constants across modules.
+- You are seeing listener cleanup bugs.
+- New contributors are making IPC wiring mistakes.
+- You are adding a second renderer surface or multi-window routing.
+
+---
+
 ## Phase 0 - Audit and map (no behavior changes)
 
 ### Objective

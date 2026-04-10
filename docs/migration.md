@@ -3,6 +3,7 @@
 Step-by-step guides for migrating to electron-message-bridge from bare Electron IPC or earlier library versions.
 
 For a phased, assistant-friendly rollout plan, see [Typical Electron Migration Playbook](./migration-playbook.md).
+If your app is still very small and you want minimum code now, see [Minimal mode first](./migration-playbook.md#minimal-mode-first-recommended-for-tiny-apps).
 
 ---
 
