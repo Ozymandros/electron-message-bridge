@@ -1,4 +1,4 @@
-# @electron-message-bridge/adapter-assemblyscript
+# electron-message-bridge-adapter-assemblyscript
 
 Optional AssemblyScript / WebAssembly adapter for [`electron-message-bridge`](https://github.com/your-org/electron-message-bridge).
 
@@ -14,12 +14,15 @@ The core `electron-message-bridge` is intentionally lean. AssemblyScript support
 - Allows the adapter to evolve independently.
 - Makes the optional dependency on `@assemblyscript/loader` explicit.
 
+This package depends on `electron-message-bridge` as a peer dependency, so your
+application owns the core version and can keep `core` and `adapter` aligned.
+
 ---
 
 ## Installation
 
 ```bash
-npm install @electron-message-bridge/adapter-assemblyscript
+npm install electron-message-bridge-adapter-assemblyscript
 # peer deps (if not already installed)
 npm install electron-message-bridge electron
 ```
@@ -30,7 +33,7 @@ npm install electron-message-bridge electron
 
 ```ts
 // main.ts
-import { createAssemblyScriptAdapter, asc } from '@electron-message-bridge/adapter-assemblyscript';
+import { createAssemblyScriptAdapter, asc } from 'electron-message-bridge-adapter-assemblyscript';
 import { defineIpcApi } from 'electron-message-bridge';
 import { exposeApiToRenderer } from 'electron-message-bridge/preload';
 
@@ -89,7 +92,7 @@ Lifecycle-managed plugin for use with `PluginHost`:
 
 ```ts
 import { PluginHost } from 'electron-message-bridge/plugins';
-import { AssemblyScriptPlugin } from '@electron-message-bridge/adapter-assemblyscript';
+import { AssemblyScriptPlugin } from 'electron-message-bridge-adapter-assemblyscript';
 
 const host = new PluginHost();
 host.register(new AssemblyScriptPlugin({
@@ -114,7 +117,7 @@ Compatibility shim for [`@assemblyscript/loader`](https://www.assemblyscript.org
 
 ```ts
 import { instantiate } from '@assemblyscript/loader';
-import { wrapLoaderInstance, createAssemblyScriptAdapter } from '@electron-message-bridge/adapter-assemblyscript';
+import { wrapLoaderInstance, createAssemblyScriptAdapter } from 'electron-message-bridge-adapter-assemblyscript';
 
 const { exports } = await instantiate(fs.readFileSync('./math.wasm'));
 const adapter = await createAssemblyScriptAdapter(
