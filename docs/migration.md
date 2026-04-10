@@ -2,6 +2,8 @@
 
 Step-by-step guides for migrating to electron-message-bridge from bare Electron IPC or earlier library versions.
 
+For a phased, assistant-friendly rollout plan, see [Typical Electron Migration Playbook](./migration-playbook.md).
+
 ---
 
 ## Migrating AssemblyScript adapter to standalone package (v0.1.x → v0.2.x)
