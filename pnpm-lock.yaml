@@ -15,19 +15,13 @@ importers:
 
   .:
     dependencies:
+      electron-message-bridge-adapter-assemblyscript:
+        specifier: ^0.1.0
+        version: 0.1.1(electron-message-bridge@0.2.0(electron@41.2.0))(electron@41.2.0)
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.1
     devDependencies:
-      '@electron-ipc-helper/adapter-grpc':
-        specifier: workspace:*
-        version: link:packages/adapter-grpc
-      '@electron-ipc-helper/adapter-named-pipe':
-        specifier: workspace:*
-        version: link:packages/adapter-named-pipe
-      '@grpc/grpc-js':
-        specifier: ^1.9.0
-        version: 1.14.3
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -46,9 +40,6 @@ importers:
       electron:
         specifier: '>=39.8.5'
         version: 41.2.0
-      electron-message-bridge-adapter-assemblyscript:
-        specifier: workspace:*
-        version: link:packages/adapter-assemblyscript
       eslint:
         specifier: ^10.2.0
         version: 10.2.0
@@ -152,6 +143,34 @@ importers:
         specifier: ^1.6.0
         version: 1.6.1(@types/node@20.19.39)(lightningcss@1.32.0)
 
+  packages/adapter-stdio:
+    dependencies:
+      electron:
+        specifier: '>=39.8.5'
+        version: 41.2.0
+      electron-message-bridge:
+        specifier: workspace:^
+        version: link:../..
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.39
+      '@vitest/coverage-v8':
+        specifier: ^1.6.0
+        version: 1.6.1(vitest@1.6.1(@types/node@20.19.39)(lightningcss@1.32.0))
+      rimraf:
+        specifier: ^5.0.0
+        version: 5.0.10
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(postcss@8.5.9)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.1(@types/node@20.19.39)(lightningcss@1.32.0)
+
   packages/create-electron-ipc-app:
     dependencies:
       commander:
@@ -164,6 +183,37 @@ importers:
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.39
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(postcss@8.5.9)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.1(@types/node@20.19.39)(lightningcss@1.32.0)
+
+  packages/plugin-speech-whisper:
+    dependencies:
+      node-record-lpcm16:
+        specifier: ^1.0.1
+        version: 1.0.1
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.39
+      '@vitest/coverage-v8':
+        specifier: ^1.6.1
+        version: 1.6.1(vitest@1.6.1(@types/node@20.19.39)(lightningcss@1.32.0))
+      electron:
+        specifier: '>=39.8.5'
+        version: 41.2.0
+      electron-message-bridge:
+        specifier: workspace:*
+        version: link:../..
+      rimraf:
+        specifier: ^5.0.0
+        version: 5.0.10
       tsup:
         specifier: ^8.0.0
         version: 8.5.1(postcss@8.5.9)(typescript@5.9.3)
@@ -860,6 +910,14 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
+  debug@2.6.9:
+    resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
     engines: {node: '>=6.0'}
@@ -914,6 +972,11 @@ packages:
 
   electron-message-bridge@0.1.1:
     resolution: {integrity: sha512-5JtPzKj6cfHOjxdEXrI0CdgS8g6SvR0gcwL9mq9GqU6J6V1AJGcV6h8Gi76xMtLgyCRCwz3t3oPOJZQvnnRR6w==}
+    peerDependencies:
+      electron: '>=39.8.5'
+
+  electron-message-bridge@0.2.0:
+    resolution: {integrity: sha512-v6f8NMZMCIaZ0m0zXLwUgLh7a0dvSwE9V2hJy9WZ952uMcQbx0oNsBnNGU6l573iPtB1X2gCKOHdFTQt5BJfdA==}
     peerDependencies:
       electron: '>=39.8.5'
 
@@ -1378,6 +1441,9 @@ packages:
   mlly@1.8.2:
     resolution: {integrity: sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==}
 
+  ms@2.0.0:
+    resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
+
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
@@ -1391,6 +1457,9 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+
+  node-record-lpcm16@1.0.1:
+    resolution: {integrity: sha512-H75GMOP8ErnF67m21+qSgj4USnzv5RLfm7OkEItdIi+soNKoJZpMQPX6umM8Cn9nVPSgd/dBUtc1msst5MmABA==}
 
   normalize-url@6.1.0:
     resolution: {integrity: sha512-DlL+XwOy3NxAQ8xuC0okPgK46iuVNAK01YN7RueYBqqFeGsBjV9XmCAzAdgt+667bCl5kPh9EqKKDwnaPG1I7A==}
@@ -2464,6 +2533,10 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
+  debug@2.6.9:
+    dependencies:
+      ms: 2.0.0
+
   debug@4.4.3:
     dependencies:
       ms: 2.1.3
@@ -2509,10 +2582,21 @@ snapshots:
       electron: 41.2.0
       electron-message-bridge: 0.1.1(electron@41.2.0)
 
+  electron-message-bridge-adapter-assemblyscript@0.1.1(electron-message-bridge@0.2.0(electron@41.2.0))(electron@41.2.0):
+    dependencies:
+      electron: 41.2.0
+      electron-message-bridge: 0.2.0(electron@41.2.0)
+
   electron-message-bridge@0.1.1(electron@41.2.0):
     dependencies:
       electron: 41.2.0
       electron-message-bridge-adapter-assemblyscript: 0.1.1(electron-message-bridge@0.1.1(electron@41.2.0))(electron@41.2.0)
+      js-yaml: 4.1.1
+
+  electron-message-bridge@0.2.0(electron@41.2.0):
+    dependencies:
+      electron: 41.2.0
+      electron-message-bridge-adapter-assemblyscript: 0.1.1(electron-message-bridge@0.2.0(electron@41.2.0))(electron@41.2.0)
       js-yaml: 4.1.1
 
   electron@41.2.0:
@@ -3009,6 +3093,8 @@ snapshots:
       pkg-types: 1.3.1
       ufo: 1.6.3
 
+  ms@2.0.0: {}
+
   ms@2.1.3: {}
 
   mz@2.7.0:
@@ -3020,6 +3106,12 @@ snapshots:
   nanoid@3.3.11: {}
 
   natural-compare@1.4.0: {}
+
+  node-record-lpcm16@1.0.1:
+    dependencies:
+      debug: 2.6.9
+    transitivePeerDependencies:
+      - supports-color
 
   normalize-url@6.1.0: {}
 
