@@ -137,6 +137,9 @@
     "electron-message-bridge-adapter-assemblyscript": "^0.1.0"
   },
   "devDependencies": {
+    "@electron-ipc-helper/adapter-grpc": "workspace:*",
+    "@electron-ipc-helper/adapter-named-pipe": "workspace:*",
+    "@electron-ipc-helper/adapter-stdio": "workspace:*",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
