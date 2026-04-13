@@ -31,7 +31,7 @@ export default defineConfig({
   // electron and optional adapter packages are always externals — never bundle them
   external: [
     'electron',
-    'electron-message-bridge-adapter-assemblyscript',
+    '@ozymandros/electron-message-bridge-adapter-assemblyscript',
     '@electron-ipc-helper/adapter-named-pipe',
     '@electron-ipc-helper/adapter-grpc',
     '@electron-ipc-helper/adapter-stdio',

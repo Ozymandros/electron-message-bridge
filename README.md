@@ -49,13 +49,13 @@ For optional adapters, install the adapter package directly. The library ships t
 
 This project provides several optional transport adapters you can install when you need to expose handlers over different IPC mechanisms.
 
-- AssemblyScript / WebAssembly adapter — `electron-message-bridge-adapter-assemblyscript`
+- AssemblyScript / WebAssembly adapter — `@ozymandros/electron-message-bridge-adapter-assemblyscript`
 
   Install:
 
   ```bash
-  pnpm add electron-message-bridge-adapter-assemblyscript
-  # or: npm install electron-message-bridge-adapter-assemblyscript
+  pnpm add @ozymandros/electron-message-bridge-adapter-assemblyscript
+  # or: npm install @ozymandros/electron-message-bridge-adapter-assemblyscript
   ```
 
   Usage (shim import):
@@ -63,7 +63,7 @@ This project provides several optional transport adapters you can install when y
   ```ts
   const { createAssemblyScriptAdapter } = await import('electron-message-bridge/adapters/assemblyscript');
   // or import directly from the adapter package:
-  // import { createAssemblyScriptAdapter } from 'electron-message-bridge-adapter-assemblyscript';
+  // import { createAssemblyScriptAdapter } from '@ozymandros/electron-message-bridge-adapter-assemblyscript';
   ```
 
 - gRPC adapter — `@electron-ipc-helper/adapter-grpc` (requires `@grpc/grpc-js`)

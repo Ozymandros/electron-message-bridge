@@ -16,7 +16,7 @@
       "@electron-ipc-helper/adapter-grpc": ["./packages/adapter-grpc/src/index.ts"],
       "@electron-ipc-helper/adapter-stdio": ["./packages/adapter-stdio/src/index.ts"],
       "@electron-ipc-helper/adapter-named-pipe": ["./packages/adapter-named-pipe/src/index.ts"],
-      "electron-message-bridge-adapter-assemblyscript": ["./packages/adapter-assemblyscript/src/index.ts"]
+      "@ozymandros/electron-message-bridge-adapter-assemblyscript": ["./packages/adapter-assemblyscript/src/index.ts"]
     },
     "lib": ["ES2020", "DOM"],
     "forceConsistentCasingInFileNames": true,

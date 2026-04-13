@@ -42,7 +42,7 @@ declare module '@electron-ipc-helper/adapter-named-pipe' {
   export type NamedPipeCapabilities = any;
 }
 
-declare module 'electron-message-bridge-adapter-assemblyscript' {
+declare module '@ozymandros/electron-message-bridge-adapter-assemblyscript' {
   export type AscFnDescriptor = any;
   export type AscSchema = any;
   export type AscRuntimeExports = any;

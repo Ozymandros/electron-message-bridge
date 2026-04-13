@@ -3,7 +3,7 @@
  *
  * Dynamic adapter loading utility for electron-message-bridge.
  *
- * Optional adapter packages (e.g. `electron-message-bridge-adapter-assemblyscript`)
+ * Optional adapter packages (e.g. `@ozymandros/electron-message-bridge-adapter-assemblyscript`)
  * are declared as `optionalDependencies`. If a consumer has not installed one,
  * a static `import` fails at module-load time with a cryptic `MODULE_NOT_FOUND`
  * error that carries no actionable install hint.
@@ -77,8 +77,8 @@ import { AdapterMissingError } from '../errors.js';
  * @example
  * ```ts
  * const mod = await requireAdapter(
- *   'electron-message-bridge-adapter-assemblyscript',
- *   () => import('electron-message-bridge-adapter-assemblyscript'),
+ *   '@ozymandros/electron-message-bridge-adapter-assemblyscript',
+ *   () => import('@ozymandros/electron-message-bridge-adapter-assemblyscript'),
  * );
  * return mod.createAssemblyScriptAdapter(source, schema);
  * ```

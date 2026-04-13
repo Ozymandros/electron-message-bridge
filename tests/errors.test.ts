@@ -315,13 +315,13 @@ describe('AdapterMissingError', () => {
   });
 
   it('exposes .adapterName field', () => {
-    const err = new AdapterMissingError('electron-message-bridge-adapter-assemblyscript');
-    expect(err.adapterName).toBe('electron-message-bridge-adapter-assemblyscript');
+    const err = new AdapterMissingError('@ozymandros/electron-message-bridge-adapter-assemblyscript');
+    expect(err.adapterName).toBe('@ozymandros/electron-message-bridge-adapter-assemblyscript');
   });
 
   it('message includes the adapter name and an install hint', () => {
-    const err = new AdapterMissingError('electron-message-bridge-adapter-assemblyscript');
-    expect(err.message).toContain('electron-message-bridge-adapter-assemblyscript');
+    const err = new AdapterMissingError('@ozymandros/electron-message-bridge-adapter-assemblyscript');
+    expect(err.message).toContain('@ozymandros/electron-message-bridge-adapter-assemblyscript');
     expect(err.message).toContain('npm install');
   });
 });

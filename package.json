@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Ozymandros/electron-message-bridge"
+    "url": "https://github.com/Ozymandros/electron-message-bridge.git"
   },
   "type": "module",
   "packageManager": "pnpm@10.10.0",

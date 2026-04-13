@@ -33,7 +33,7 @@ export default defineConfig({
       'electron-ipc-helper/transport': new URL('./src/transport.ts', bridgeRoot).pathname,
       'electron-ipc-helper/boundary': new URL('./src/boundary.ts', bridgeRoot).pathname,
       'electron-ipc-helper': new URL('./src/index.ts', bridgeRoot).pathname,
-      'electron-message-bridge-adapter-assemblyscript': fileURLToPath(
+      '@ozymandros/electron-message-bridge-adapter-assemblyscript': fileURLToPath(
         new URL('./packages/adapter-assemblyscript/src/index.ts', bridgeRoot),
       ),
       'electron-message-bridge/plugins': fileURLToPath(new URL('./src/plugins.ts', bridgeRoot)),

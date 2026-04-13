@@ -1,5 +1,5 @@
 {
-  "name": "electron-message-bridge-adapter-assemblyscript",
+  "name": "@ozymandros/electron-message-bridge-adapter-assemblyscript",
   "version": "0.3.0",
   "description": "Optional AssemblyScript / WebAssembly adapter for electron-message-bridge. Bridges WASM exports into typed IPC handlers.",
   "keywords": [
@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Ozymandros/electron-message-bridge"
+    "url": "https://github.com/Ozymandros/electron-message-bridge.git"
   },
   "type": "module",
   "private": false,

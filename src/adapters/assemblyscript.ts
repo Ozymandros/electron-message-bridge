@@ -2,11 +2,11 @@
  * @deprecated
  *
  * The AssemblyScript adapter has been extracted into a standalone package:
- * **`electron-message-bridge-adapter-assemblyscript`**
+ * **`@ozymandros/electron-message-bridge-adapter-assemblyscript`**
  *
  * Install the new package:
  * ```bash
- * npm install electron-message-bridge-adapter-assemblyscript
+ * npm install @ozymandros/electron-message-bridge-adapter-assemblyscript
  * ```
  *
  * Then update your imports:
@@ -15,7 +15,7 @@
  * import { createAssemblyScriptAdapter } from 'electron-message-bridge/adapters/assemblyscript';
  *
  * // ✅ New (static import — package must be installed)
- * import { createAssemblyScriptAdapter } from 'electron-message-bridge-adapter-assemblyscript';
+ * import { createAssemblyScriptAdapter } from '@ozymandros/electron-message-bridge-adapter-assemblyscript';
  *
  * // ✅ New (dynamic import — throws AdapterMissingError if not installed)
  * import { loadAssemblyScriptAdapter } from 'electron-message-bridge/adapters/assemblyscript';
@@ -26,24 +26,24 @@
  * @module adapters/assemblyscript
  */
 
-import type * as AscAdapterModule from 'electron-message-bridge-adapter-assemblyscript';
+import type * as AscAdapterModule from '@ozymandros/electron-message-bridge-adapter-assemblyscript';
 import { requireAdapter } from './loader.js';
 
-const PACKAGE = 'electron-message-bridge-adapter-assemblyscript';
+const PACKAGE = '@ozymandros/electron-message-bridge-adapter-assemblyscript';
 
 // ─── Type-only re-exports ─────────────────────────────────────────────────────
 // These are erased at runtime (zero cost). They allow consumers who already
 // have the package installed to get full type inference from this shim.
 // NOTE: TypeScript still resolves this module at type-check time, so
-// electron-message-bridge-adapter-assemblyscript must be installed for types to
+// @ozymandros/electron-message-bridge-adapter-assemblyscript must be installed for types to
 // work. Use `loadAssemblyScriptAdapter()` below for the graceful runtime path
 // when the package may be absent.
-export type * from 'electron-message-bridge-adapter-assemblyscript';
+export type * from '@ozymandros/electron-message-bridge-adapter-assemblyscript';
 
 // ─── Lazy dynamic loader ──────────────────────────────────────────────────────
 
 /**
- * Dynamically loads `electron-message-bridge-adapter-assemblyscript`.
+ * Dynamically loads `@ozymandros/electron-message-bridge-adapter-assemblyscript`.
  *
  * Use this when you want a graceful, typed error if the optional package is
  * not installed — rather than a cryptic `ERR_MODULE_NOT_FOUND` at import time.
@@ -52,7 +52,7 @@ export type * from 'electron-message-bridge-adapter-assemblyscript';
  * inference. Call it once and cache the result if you need it in multiple
  * places.
  *
- * @throws {AdapterMissingError} if `electron-message-bridge-adapter-assemblyscript`
+ * @throws {AdapterMissingError} if `@ozymandros/electron-message-bridge-adapter-assemblyscript`
  *   is not installed.
  *
  * @example
@@ -69,7 +69,7 @@ export type * from 'electron-message-bridge-adapter-assemblyscript';
  * } catch (err) {
  *   if (err instanceof AdapterMissingError) {
  *     console.error(`Missing: ${err.adapterName}`);
- *     console.error('Run: npm install electron-message-bridge-adapter-assemblyscript');
+ *     console.error('Run: npm install @ozymandros/electron-message-bridge-adapter-assemblyscript');
  *   }
  * }
  * ```
@@ -88,4 +88,4 @@ export {
   wrapLoaderInstance,
   AssemblyScriptPlugin,
   asc,
-} from 'electron-message-bridge-adapter-assemblyscript';
+} from '@ozymandros/electron-message-bridge-adapter-assemblyscript';
