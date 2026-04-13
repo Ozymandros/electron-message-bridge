@@ -1,7 +1,7 @@
 /**
- * @package @electron-ipc-helper/adapter-named-pipe
+ * @package @electron-message-bridge/adapter-named-pipe
  *
- * Named Pipe / Unix socket transport adapter for electron-ipc-helper.
+ * Named Pipe / Unix socket transport adapter for electron-message-bridge.
  *
  * Exposes the same typed `defineIpcApi` handlers over a local IPC socket
  * without requiring Electron's built-in `ipcMain` / `ipcRenderer` mechanism.
@@ -16,8 +16,8 @@
  *
  * ```ts
  * // main.ts (server side)
- * import { defineIpcApi } from 'electron-ipc-helper';
- * import { createNamedPipeServerTransport } from '@electron-ipc-helper/adapter-named-pipe';
+ * import { defineIpcApi } from 'electron-message-bridge';
+ * import { createNamedPipeServerTransport } from '@electron-message-bridge/adapter-named-pipe';
  *
  * const transport = createNamedPipeServerTransport('/tmp/my-app.sock');
  * export const api = defineIpcApi(
@@ -26,7 +26,7 @@
  * );
  *
  * // client.ts (any Node.js process)
- * import { createNamedPipeClientTransport } from '@electron-ipc-helper/adapter-named-pipe';
+ * import { createNamedPipeClientTransport } from '@electron-message-bridge/adapter-named-pipe';
  *
  * const transport = createNamedPipeClientTransport('/tmp/my-app.sock');
  * await transport.start();
@@ -36,11 +36,11 @@
  * @module
  */
 
-import type { TransportAdapter } from 'electron-ipc-helper/transport';
-import type { BridgePayload } from 'electron-ipc-helper/boundary';
-import type { NegotiablePlugin, AdapterManifest } from 'electron-ipc-helper/plugins';
-import type { Plugin, PluginContext } from 'electron-ipc-helper/plugins';
-import { PROTOCOL_VERSION } from 'electron-ipc-helper/plugins';
+import type { TransportAdapter } from '@ozymandros/electron-message-bridge/transport';
+import type { BridgePayload } from '@ozymandros/electron-message-bridge/boundary';
+import type { NegotiablePlugin, AdapterManifest } from '@ozymandros/electron-message-bridge/plugins';
+import type { Plugin, PluginContext } from '@ozymandros/electron-message-bridge/plugins';
+import { PROTOCOL_VERSION } from '@ozymandros/electron-message-bridge/plugins';
 import { NamedPipeServer } from './server.js';
 import { NamedPipeClient } from './client.js';
 
@@ -51,7 +51,7 @@ export { NamedPipeClient } from './client.js';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const ADAPTER_NAME = '@electron-ipc-helper/adapter-named-pipe';
+const ADAPTER_NAME = '@electron-message-bridge/adapter-named-pipe';
 const ADAPTER_VERSION = '0.1.0';
 
 // ─── Server transport ─────────────────────────────────────────────────────────
@@ -234,7 +234,7 @@ export class NamedPipePlugin
       name: ADAPTER_NAME,
       version: ADAPTER_VERSION,
       protocolVersion: PROTOCOL_VERSION,
-      supportsBinary: true,
+      supportsBinary: false,
       supportsStreaming: false,
       capabilities: {
         protocol: 'named-pipe',

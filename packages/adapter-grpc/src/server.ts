@@ -2,7 +2,7 @@
  * gRPC server for the main process.
  *
  * Registers a `Bridge.Invoke` unary handler that dispatches incoming RPC
- * calls to electron-ipc-helper transport handlers and sends back JSON-encoded
+ * calls to electron-message-bridge transport handlers and sends back JSON-encoded
  * responses.
  *
  * `@grpc/grpc-js` is dynamically imported inside `start()` so the package
@@ -11,7 +11,7 @@
 
 import { BridgeServiceDefinition } from './service.js';
 import type { InvokeRequest, InvokeResponse } from './service.js';
-import type { TransportHandler } from 'electron-ipc-helper/transport';
+import type { TransportHandler } from '@ozymandros/electron-message-bridge/transport';
 
 // ─── GrpcServer ───────────────────────────────────────────────────────────────
 

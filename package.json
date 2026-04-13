@@ -17,7 +17,7 @@
     "url": "https://github.com/Ozymandros/electron-message-bridge.git"
   },
   "type": "module",
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.33.0",
   "files": [
     "dist"
   ],
@@ -136,12 +136,14 @@
     "typecheck:refs": "tsc -b --pretty false",
     "clean": "rimraf dist",
     "pack:all": "pnpm run build && pnpm --dir packages/adapter-assemblyscript run build && pnpm pack && pnpm --dir packages/adapter-assemblyscript pack --pack-destination ../..",
-    "publish:adapters": "pnpm -r --filter \"./packages/adapter-*\" publish --access public --no-git-checks --provenance --registry=https://registry.npmjs.org",
-    "publish:core": "pnpm publish --access public --no-git-checks --provenance --registry=https://registry.npmjs.org",
-    "publish:all": "pnpm install --no-frozen-lockfile && pnpm run build:all && pnpm run publish:adapters && pnpm run publish:core",
+    "publish:adapters": "pnpm -r --filter \"./packages/adapter-*\" publish --access public --no-git-checks --registry=https://registry.npmjs.org",
+    "publish:adapters:ci": "pnpm -r --filter \"./packages/adapter-*\" publish --access public --no-git-checks --provenance --registry=https://registry.npmjs.org",
+    "publish:core": "pnpm publish --access public --no-git-checks --registry=https://registry.npmjs.org",
+    "publish:core:ci": "pnpm publish --access public --no-git-checks --provenance --registry=https://registry.npmjs.org",
+    "publish:all": "pnpm install --no-frozen-lockfile && pnpm run build:all && pnpm -r --filter \"./packages/*\" publish --access public --no-git-checks --registry=https://registry.npmjs.org && pnpm run publish:core",
     "publish:adapters:dry-run": "pnpm -r --filter \"./packages/adapter-*\" publish --dry-run --access public --no-git-checks --registry=https://registry.npmjs.org",
     "publish:core:dry-run": "pnpm publish --dry-run --access public --no-git-checks --registry=https://registry.npmjs.org",
-    "publish:all:dry-run": "pnpm install --no-frozen-lockfile && pnpm run build:all && pnpm run publish:adapters:dry-run && pnpm run publish:core:dry-run"
+    "publish:all:dry-run": "pnpm install --no-frozen-lockfile && pnpm run build:all && pnpm -r --filter \"./packages/*\" publish --dry-run --access public --no-git-checks --registry=https://registry.npmjs.org && pnpm run publish:core:dry-run"
   },
   "peerDependencies": {
     "electron": ">=20.0.0"
