@@ -11,9 +11,44 @@
  *   - `requireAdapter` throws `AdapterMissingError` on module-not-found errors.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { AdapterMissingError } from '../../src/errors.js';
 import { requireAdapter } from '../../src/adapters/loader.js';
+
+// Virtual adapter mocks keep this suite independent from optional package installs.
+vi.mock('@electron-ipc-helper/adapter-stdio', () => ({
+  createStdioServerTransport: () => ({ name: 'stdio-server' }),
+  createStdioClientTransport: () => ({ name: 'stdio-client' }),
+  StdioPlugin: class StdioPlugin {
+    public readonly name = 'stdio';
+  },
+}));
+
+vi.mock('@electron-ipc-helper/adapter-grpc', () => ({
+  createGrpcServerTransport: () => ({ name: 'grpc-server' }),
+  createGrpcClientTransport: () => ({ name: 'grpc-client' }),
+  BridgeServiceDefinition: {
+    invoke: { path: '/electronbridge.Bridge/Invoke' },
+  },
+  GrpcPlugin: class GrpcPlugin {
+    public readonly name = 'grpc';
+  },
+}));
+
+vi.mock('@electron-ipc-helper/adapter-named-pipe', () => ({
+  createNamedPipeServerTransport: () => ({ name: 'named-pipe-server' }),
+  createNamedPipeClientTransport: () => ({ name: 'named-pipe-client' }),
+  NamedPipePlugin: class NamedPipePlugin {
+    public readonly name = 'named-pipe';
+    public getManifest() {
+      return {
+        name: '@electron-ipc-helper/adapter-named-pipe',
+        supportsBinary: true,
+        supportsStreaming: false,
+      };
+    }
+  },
+}));
 
 // ─── requireAdapter error path (shared across all shims) ─────────────────────
 
