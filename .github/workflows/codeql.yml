@@ -48,7 +48,7 @@ jobs:
         run: pnpm test
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
           # Use the security-extended query suite for broader coverage
@@ -58,6 +58,6 @@ jobs:
         run: pnpm run build
 
       - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
