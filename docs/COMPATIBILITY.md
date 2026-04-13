@@ -84,8 +84,8 @@ The following are **not** breaking changes:
 
 | adapter version | core peer | Node.js | AssemblyScript | AS Loader | Status |
 |---|---|---|---|---|---|
-| **0.1.x** (current) | `^0.1.0` | ≥ 18 | ≥ 0.27 | ≥ 0.10 (optional) | Active |
-| **0.2.x** (planned) | `^0.2.0` | ≥ 18 | ≥ 0.27 | ≥ 0.10 (optional) | Planned |
+| **0.3.x** (current) | `>=0.1.0` | ≥ 18 | ≥ 0.27 | ≥ 0.10 (optional) | Active |
+| **0.4.x** (planned) | `>=0.2.0` | ≥ 18 | ≥ 0.27 | ≥ 0.10 (optional) | Planned |
 
 ### Electron LTS Coverage
 
@@ -160,7 +160,7 @@ We test against all Node.js **Active LTS** and **Current** releases in CI.
 
 | adapter version | core peer | Node.js | Notes | Status |
 |---|---|---|---|---|
-| **0.1.x** (current) | `^0.1.0` | ≥ 18 | Requires `@grpc/grpc-js` as a peer dependency. Exposes `BridgeServiceDefinition` compatible with `@grpc/grpc-js`. | Active |
+| **0.1.x** (current) | `>=0.1.0` | ≥ 18 | Requires `@grpc/grpc-js` as a peer dependency. Exposes `BridgeServiceDefinition` compatible with `@grpc/grpc-js`. | Active |
 
 Installation:
 
@@ -172,7 +172,7 @@ pnpm add @electron-ipc-helper/adapter-grpc @grpc/grpc-js
 
 | adapter version | core peer | Node.js | Notes | Status |
 |---|---|---|---|---|
-| **0.1.x** (current) | `^0.1.0` | ≥ 18 | Exposes Named Pipe / Unix socket transport for inter-process RPC. Supports binary payloads where applicable. | Active |
+| **0.1.x** (current) | `>=0.1.0` | ≥ 18 | Exposes Named Pipe / Unix socket transport for inter-process RPC. Supports binary payloads where applicable. | Active |
 
 Installation:
 
@@ -184,7 +184,7 @@ pnpm add @electron-ipc-helper/adapter-named-pipe
 
 | adapter version | core peer | Node.js | Notes | Status |
 |---|---|---|---|---|
-| **0.1.x** (current) | `^0.1.0` | ≥ 18 | Provides a newline-delimited JSON (NDJSON) stdio transport for CLI and child-process integration. | Active |
+| **0.1.x** (current) | `>=0.1.0` | ≥ 18 | Provides a newline-delimited JSON (NDJSON) stdio transport for CLI and child-process integration. | Active |
 
 Installation:
 

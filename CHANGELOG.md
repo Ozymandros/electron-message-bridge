@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+- Monorepo layout normalized: the published core package remains at repository root, while optional adapters/plugins stay as independent workspace packages under `packages/*`.
+- CI/release workflows now use root-core paths for `dist`/`coverage` and main-package publish/version checks.
+
+### Fixed
+- `tests/types.test-d.ts` now resets Electron mock state before each test, preventing duplicate IPC handler registration errors during runtime test runs.
+- Workspace adapter builds now use package-local `tsup` configs (grpc/named-pipe/stdio), avoiding accidental inheritance of root entrypoints in recursive builds.
+
 ### Added
 - Plugin architecture (`src/plugins.ts`): `PluginHost`, `Plugin<Caps>`, `PluginContext`, `PluginConflictError`, `PluginHook` — lifecycle-managed, typed capability plugins with conflict detection and error isolation.
 - Reference plugins: `WindowStatePlugin` (window bounds persistence), `DiagnosticsPlugin` (IPC call counting, snapshots), `UpdaterPlugin` (auto-updater facade).

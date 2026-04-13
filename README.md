@@ -22,7 +22,7 @@ A small, typed, zero‑boilerplate Electron IPC library that gives you a clean, 
 - **Composable** — define multiple APIs and event sets without conflicts.  
 - **Safe by default** — guaranteed cleanup of handlers and listeners to prevent memory leaks.  
 - **Hot‑reload friendly** — explicit `dispose()` methods and Vite HMR integration.  
-- **Lightweight** — no dependencies, minimal API surface, and zero runtime cost beyond Electron’s IPC.  
+- **Lightweight** — minimal runtime dependencies, minimal API surface, and near-zero runtime cost beyond Electron’s IPC.  
 - **Framework‑agnostic** — works with React, Vue, Svelte, Solid, vanilla JS, or anything else.  
 - **Well‑tested** — unit tests cover core behavior and edge cases, with CI to prevent regressions.
 
@@ -38,6 +38,10 @@ Use only what you need:
   - `lifecycle` — child‑process lifecycle helpers.
 
 Nothing outside the core is required.
+
+The core package (`electron-message-bridge`) is published from the repository root.
+Optional adapters and plugins are maintained as separate workspace packages under
+`packages/*` and can be installed independently.
 
 For optional adapters, install the adapter package directly. The library ships thin shims under `electron-message-bridge/adapters/*` that lazily import the adapter package and throw a helpful `AdapterMissingError` if the package is not installed.
 
