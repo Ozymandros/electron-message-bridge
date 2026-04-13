@@ -68,7 +68,6 @@
  * const adapter = createAssemblyScriptAdapter(wrapLoaderInstance(exports), schema);
  * ```
  */
-
 import { readFile } from 'node:fs/promises';
 import type { ApiHandlers } from 'electron-message-bridge';
 import { ExportMissingError, RuntimeMissingError } from 'electron-message-bridge';

@@ -1,0 +1,57 @@
+{
+  "name": "@electron-ipc-helper/adapter-named-pipe",
+  "version": "0.1.0",
+  "description": "Named Pipe / Unix socket transport adapter for electron-ipc-helper. Exposes typed IPC handlers over a local socket without Electron's built-in IPC.",
+  "keywords": [
+    "electron",
+    "ipc",
+    "named-pipe",
+    "unix-socket",
+    "transport",
+    "typescript",
+    "electron-ipc-helper"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "clean": "rimraf dist"
+  },
+  "peerDependencies": {
+    "electron": ">=20.0.0",
+    "electron-message-bridge": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "electron-message-bridge": "workspace:*",
+    "rimraf": "^5.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}

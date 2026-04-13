@@ -1,0 +1,63 @@
+{
+  "name": "@electron-ipc-helper/adapter-grpc",
+  "version": "0.1.0",
+  "description": "gRPC transport adapter for electron-ipc-helper. Exposes typed IPC handlers over a gRPC channel for language-agnostic client access.",
+  "keywords": [
+    "electron",
+    "ipc",
+    "grpc",
+    "transport",
+    "typescript",
+    "electron-ipc-helper"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "clean": "rimraf dist"
+  },
+  "peerDependencies": {
+    "@grpc/grpc-js": "^1.9.0",
+    "electron": ">=20.0.0",
+    "electron-message-bridge": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@grpc/grpc-js": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@grpc/grpc-js": "^1.9.0",
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "electron-message-bridge": "workspace:*",
+    "rimraf": "^5.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}

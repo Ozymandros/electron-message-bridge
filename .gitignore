@@ -6,6 +6,5 @@ artifacts/
 .DS_Store
 obj/
 bin/
-packages/
 *.tgz
 .pnpm-store

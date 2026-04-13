@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "electron-ipc-helper": ["../../src/index.ts"],
+      "electron-ipc-helper/plugins": ["../../src/plugins.ts"],
+      "electron-ipc-helper/transport": ["../../src/transport.ts"],
+      "electron-ipc-helper/boundary": ["../../src/boundary.ts"],
+      "electron-message-bridge": ["../../src/index.ts"],
+      "electron-message-bridge/plugins": ["../../src/plugins.ts"],
+      "electron-message-bridge/transport": ["../../src/transport.ts"],
+      "electron-message-bridge/boundary": ["../../src/boundary.ts"]
+    },
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2020"],
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "tests"],
+  "exclude": ["node_modules", "dist"]
+}

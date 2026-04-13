@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "electron": ["./tests/__mocks__/electron.ts"]
     },
