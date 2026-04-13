@@ -15,22 +15,10 @@ importers:
 
   .:
     dependencies:
-      electron-message-bridge-adapter-assemblyscript:
-        specifier: ^0.1.0
-        version: 0.1.1(electron-message-bridge@0.2.0(electron@41.2.0))(electron@41.2.0)
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.1
     devDependencies:
-      '@electron-ipc-helper/adapter-grpc':
-        specifier: workspace:*
-        version: link:packages/adapter-grpc
-      '@electron-ipc-helper/adapter-named-pipe':
-        specifier: workspace:*
-        version: link:packages/adapter-named-pipe
-      '@electron-ipc-helper/adapter-stdio':
-        specifier: workspace:*
-        version: link:packages/adapter-stdio
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -66,10 +54,6 @@ importers:
         version: 1.6.1(@types/node@20.19.39)(lightningcss@1.32.0)
 
   packages/adapter-assemblyscript:
-    dependencies:
-      electron-message-bridge:
-        specifier: ^0.1.0
-        version: 0.1.1(electron@41.2.0)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -80,6 +64,9 @@ importers:
       electron:
         specifier: '>=39.8.5'
         version: 41.2.0
+      electron-message-bridge:
+        specifier: workspace:*
+        version: link:../..
       rimraf:
         specifier: ^5.0.0
         version: 5.0.10
@@ -98,9 +85,6 @@ importers:
       electron:
         specifier: '>=39.8.5'
         version: 41.2.0
-      electron-message-bridge:
-        specifier: workspace:^
-        version: link:../..
     devDependencies:
       '@grpc/grpc-js':
         specifier: ^1.9.0
@@ -111,6 +95,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^1.6.0
         version: 1.6.1(vitest@1.6.1(@types/node@20.19.39)(lightningcss@1.32.0))
+      electron-message-bridge:
+        specifier: workspace:*
+        version: link:../..
       rimraf:
         specifier: ^5.0.0
         version: 5.0.10
@@ -129,9 +116,6 @@ importers:
       electron:
         specifier: '>=39.8.5'
         version: 41.2.0
-      electron-message-bridge:
-        specifier: workspace:^
-        version: link:../..
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -139,6 +123,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^1.6.0
         version: 1.6.1(vitest@1.6.1(@types/node@20.19.39)(lightningcss@1.32.0))
+      electron-message-bridge:
+        specifier: workspace:*
+        version: link:../..
       rimraf:
         specifier: ^5.0.0
         version: 5.0.10
@@ -157,9 +144,6 @@ importers:
       electron:
         specifier: '>=39.8.5'
         version: 41.2.0
-      electron-message-bridge:
-        specifier: workspace:^
-        version: link:../..
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -167,6 +151,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^1.6.0
         version: 1.6.1(vitest@1.6.1(@types/node@20.19.39)(lightningcss@1.32.0))
+      electron-message-bridge:
+        specifier: workspace:*
+        version: link:../..
       rimraf:
         specifier: ^5.0.0
         version: 5.0.10
@@ -972,22 +959,6 @@ packages:
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
-
-  electron-message-bridge-adapter-assemblyscript@0.1.1:
-    resolution: {integrity: sha512-dtoDMIw3sM5iOZhtitzJVLzTDkrI/TIecwr24KqcG+ii0AIjFk5Mv89et1PUg5TyUTcvF/gRg5DEaeuMKh9yjg==}
-    peerDependencies:
-      electron: '>=39.8.5'
-      electron-message-bridge: ^0.1.0
-
-  electron-message-bridge@0.1.1:
-    resolution: {integrity: sha512-5JtPzKj6cfHOjxdEXrI0CdgS8g6SvR0gcwL9mq9GqU6J6V1AJGcV6h8Gi76xMtLgyCRCwz3t3oPOJZQvnnRR6w==}
-    peerDependencies:
-      electron: '>=39.8.5'
-
-  electron-message-bridge@0.2.0:
-    resolution: {integrity: sha512-v6f8NMZMCIaZ0m0zXLwUgLh7a0dvSwE9V2hJy9WZ952uMcQbx0oNsBnNGU6l573iPtB1X2gCKOHdFTQt5BJfdA==}
-    peerDependencies:
-      electron: '>=39.8.5'
 
   electron@41.2.0:
     resolution: {integrity: sha512-0OKLiymqfV0WK68RBXqAm3Myad2TpI5wwxLCBEUcH5Nugo3YfSk7p1Js/AL9266qTz5xZioUnxt9hG8FFwax0g==}
@@ -2585,28 +2556,6 @@ snapshots:
   diff-sequences@29.6.3: {}
 
   eastasianwidth@0.2.0: {}
-
-  electron-message-bridge-adapter-assemblyscript@0.1.1(electron-message-bridge@0.1.1(electron@41.2.0))(electron@41.2.0):
-    dependencies:
-      electron: 41.2.0
-      electron-message-bridge: 0.1.1(electron@41.2.0)
-
-  electron-message-bridge-adapter-assemblyscript@0.1.1(electron-message-bridge@0.2.0(electron@41.2.0))(electron@41.2.0):
-    dependencies:
-      electron: 41.2.0
-      electron-message-bridge: 0.2.0(electron@41.2.0)
-
-  electron-message-bridge@0.1.1(electron@41.2.0):
-    dependencies:
-      electron: 41.2.0
-      electron-message-bridge-adapter-assemblyscript: 0.1.1(electron-message-bridge@0.1.1(electron@41.2.0))(electron@41.2.0)
-      js-yaml: 4.1.1
-
-  electron-message-bridge@0.2.0(electron@41.2.0):
-    dependencies:
-      electron: 41.2.0
-      electron-message-bridge-adapter-assemblyscript: 0.1.1(electron-message-bridge@0.2.0(electron@41.2.0))(electron@41.2.0)
-      js-yaml: 4.1.1
 
   electron@41.2.0:
     dependencies:

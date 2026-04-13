@@ -5,8 +5,9 @@
  * produce the correct TypeScript types — no runtime assertions needed.
  */
 
-import { describe, it, expectTypeOf } from 'vitest';
+import { beforeEach, describe, it, expectTypeOf } from 'vitest';
 import { defineIpcApi, defineIpcEvents } from '../src/main.js';
+import { resetMocks } from './__mocks__/electron.js';
 import type {
   ExtractRendererApi,
   ExtractRendererEvents,
@@ -17,6 +18,10 @@ import type {
 } from '../src/types.js';
 
 // ─── defineIpcApi type inference ─────────────────────────────────────────────
+
+beforeEach(() => {
+  resetMocks();
+});
 
 describe('defineIpcApi — type inference', () => {
   it('infers simple return types correctly', () => {

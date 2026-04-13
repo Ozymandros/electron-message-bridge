@@ -12,8 +12,7 @@
       "electron-message-bridge": ["./src/index.ts"],
       "electron-message-bridge/plugins": ["./src/plugins.ts"],
       "electron-message-bridge/transport": ["./src/transport.ts"],
-      "electron-message-bridge/boundary": ["./src/boundary.ts"]
-      ,
+      "electron-message-bridge/boundary": ["./src/boundary.ts"],
       "@electron-ipc-helper/adapter-grpc": ["./packages/adapter-grpc/src/index.ts"],
       "@electron-ipc-helper/adapter-stdio": ["./packages/adapter-stdio/src/index.ts"],
       "@electron-ipc-helper/adapter-named-pipe": ["./packages/adapter-named-pipe/src/index.ts"],

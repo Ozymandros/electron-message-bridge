@@ -1,6 +1,6 @@
 {
   "name": "electron-message-bridge",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "A small, typed, zero-boilerplate Electron IPC helper. Full end-to-end type inference across main, preload, and renderer.",
   "keywords": [
     "electron",
@@ -109,6 +109,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
+    "build:all": "pnpm -r run build",
     "dev": "tsup --watch",
     "docker:mock:build": "docker build -t electron-message-bridge/mock-backend:local docker/mock-backend",
     "docker:mock:up": "docker compose -f docker-compose.integration.yml up -d --build",
@@ -116,12 +117,14 @@
     "docker:mock:logs": "docker compose -f docker-compose.integration.yml logs -f mock-backend",
     "lint": "eslint src/ tests/",
     "check": "eslint src/ tests/ && tsc --noEmit -p tsconfig.typecheck.json && vitest --typecheck run",
-    "test": "vitest run",
-    "test:integration": "vitest run tests/integration/mock-backend.integration.test.ts",
-    "test:integration:docker": "pnpm run docker:mock:up && pnpm run test:integration",
     "check:packages": "pnpm -r --filter \"./packages/*\" run typecheck",
     "check:all": "pnpm run check && pnpm run check:packages && pnpm run test:types && pnpm run test",
     "check:all:coverage": "pnpm run check && pnpm run check:packages && pnpm run test:types && pnpm run test:coverage",
+    "test": "vitest run",
+    "test:all": "pnpm -r run test",
+    "test:api-surface": "vitest run tests/api-surface.test.ts",
+    "test:integration": "vitest run tests/integration/mock-backend.integration.test.ts",
+    "test:integration:docker": "pnpm run docker:mock:up && pnpm run test:integration",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "test:types": "vitest --typecheck run",
@@ -133,13 +136,9 @@
     "electron": ">=20.0.0"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0",
-    "electron-message-bridge-adapter-assemblyscript": "^0.1.0"
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
-    "@electron-ipc-helper/adapter-grpc": "workspace:*",
-    "@electron-ipc-helper/adapter-named-pipe": "workspace:*",
-    "@electron-ipc-helper/adapter-stdio": "workspace:*",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.58.0",

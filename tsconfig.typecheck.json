@@ -1,8 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
-    "rootDir": "."
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src", "tests"],
   "exclude": ["node_modules", "dist", "examples"]

@@ -24,8 +24,6 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -57,8 +55,6 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -93,8 +89,6 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -124,8 +118,6 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -141,21 +133,22 @@ jobs:
 
       - name: Verify dist artefacts
         run: |
+          D=dist
           MISSING=0
           for f in \
-            dist/index.mjs dist/index.cjs dist/index.d.ts \
-            dist/preload.mjs dist/preload.cjs dist/preload.d.ts \
-            dist/integrations.mjs dist/integrations.cjs dist/integrations.d.ts \
-            dist/menus.mjs dist/menus.cjs dist/menus.d.ts \
-            dist/appkit.mjs dist/appkit.cjs dist/appkit.d.ts \
-            dist/lifecycle.mjs dist/lifecycle.cjs dist/lifecycle.d.ts \
-            dist/boundary.mjs dist/boundary.cjs dist/boundary.d.ts \
-            dist/plugins.mjs dist/plugins.cjs dist/plugins.d.ts \
-            dist/plugins/window-state.mjs dist/plugins/window-state.cjs dist/plugins/window-state.d.ts \
-            dist/plugins/diagnostics.mjs dist/plugins/diagnostics.cjs dist/plugins/diagnostics.d.ts \
-            dist/plugins/updater.mjs dist/plugins/updater.cjs dist/plugins/updater.d.ts \
-            dist/adapters/loader.mjs dist/adapters/loader.cjs dist/adapters/loader.d.ts \
-            dist/adapters/assemblyscript.mjs dist/adapters/assemblyscript.cjs dist/adapters/assemblyscript.d.ts; do
+            "$D/index.mjs" "$D/index.cjs" "$D/index.d.ts" \
+            "$D/preload.mjs" "$D/preload.cjs" "$D/preload.d.ts" \
+            "$D/integrations.mjs" "$D/integrations.cjs" "$D/integrations.d.ts" \
+            "$D/menus.mjs" "$D/menus.cjs" "$D/menus.d.ts" \
+            "$D/appkit.mjs" "$D/appkit.cjs" "$D/appkit.d.ts" \
+            "$D/lifecycle.mjs" "$D/lifecycle.cjs" "$D/lifecycle.d.ts" \
+            "$D/boundary.mjs" "$D/boundary.cjs" "$D/boundary.d.ts" \
+            "$D/plugins.mjs" "$D/plugins.cjs" "$D/plugins.d.ts" \
+            "$D/plugins/window-state.mjs" "$D/plugins/window-state.cjs" "$D/plugins/window-state.d.ts" \
+            "$D/plugins/diagnostics.mjs" "$D/plugins/diagnostics.cjs" "$D/plugins/diagnostics.d.ts" \
+            "$D/plugins/updater.mjs" "$D/plugins/updater.cjs" "$D/plugins/updater.d.ts" \
+            "$D/adapters/loader.mjs" "$D/adapters/loader.cjs" "$D/adapters/loader.d.ts" \
+            "$D/adapters/assemblyscript.mjs" "$D/adapters/assemblyscript.cjs" "$D/adapters/assemblyscript.d.ts"; do
             if [ ! -f "$f" ]; then
               echo "::error::Missing dist artefact: $f"
               MISSING=1
@@ -166,10 +159,11 @@ jobs:
 
       - name: Check dist file sizes (budget gate)
         run: |
+          D=dist
           # Ensure no single entry point exceeds 50 KB (uncompressed)
           BUDGET_BYTES=51200
           FAIL=0
-          for f in dist/*.mjs dist/plugins/*.mjs; do
+          for f in "$D"/*.mjs "$D"/plugins/*.mjs; do
             SIZE=$(wc -c < "$f")
             if [ "$SIZE" -gt "$BUDGET_BYTES" ]; then
               echo "::warning::$f exceeds size budget: ${SIZE} bytes (budget: ${BUDGET_BYTES})"
@@ -196,8 +190,6 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -209,4 +201,4 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Run API surface tests
-        run: pnpm vitest run tests/api-surface.test.ts
+        run: pnpm run test:api-surface
