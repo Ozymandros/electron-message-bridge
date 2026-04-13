@@ -4,10 +4,6 @@
       "electron-message-bridge": ["../../src/index.ts"],
       "electron-message-bridge/plugins": ["../../src/plugins.ts"],
       "electron-message-bridge/transport": ["../../src/transport.ts"],
-      "electron-message-bridge/boundary": ["../../src/boundary.ts"],
-      "electron-message-bridge": ["../../src/index.ts"],
-      "electron-message-bridge/plugins": ["../../src/plugins.ts"],
-      "electron-message-bridge/transport": ["../../src/transport.ts"],
       "electron-message-bridge/boundary": ["../../src/boundary.ts"]
     },
     "target": "ES2020",
