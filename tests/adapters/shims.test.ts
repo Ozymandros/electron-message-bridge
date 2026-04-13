@@ -11,14 +11,9 @@
  *   - `requireAdapter` throws `AdapterMissingError` on module-not-found errors.
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { AdapterMissingError } from '../../src/errors.js';
 import { requireAdapter } from '../../src/adapters/loader.js';
-
-// Ensure adapter package specifiers always resolve in CI/test runtime.
-vi.mock('@electron-ipc-helper/adapter-stdio', async () => import('../../packages/adapter-stdio/src/index.js'));
-vi.mock('@electron-ipc-helper/adapter-grpc', async () => import('../../packages/adapter-grpc/src/index.js'));
-vi.mock('@electron-ipc-helper/adapter-named-pipe', async () => import('../../packages/adapter-named-pipe/src/index.js'));
 
 // ─── requireAdapter error path (shared across all shims) ─────────────────────
 
