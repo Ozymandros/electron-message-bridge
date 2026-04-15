@@ -170,6 +170,18 @@ pnpm --filter @ozymandros/electron-message-bridge-plugin-speech-whisper run buil
 pnpm --filter @ozymandros/electron-message-bridge-plugin-speech-whisper run test
 ```
 
+Manual, opt-in integration-lite (local only, skipped by default):
+
+```powershell
+$env:RUN_INTEGRATION_LITE="1"
+$env:STT_ALLOW_LOCAL_MIC="1"
+$env:STT_MODEL_PATH="C:\path\to\ggml-base.bin"
+$env:STT_WHISPER_BIN="whisper" # optional, defaults to whisper on PATH
+pnpm --filter @ozymandros/electron-message-bridge-plugin-speech-whisper run test:integration-lite
+```
+
+This suite never runs in the standard `test` command and requires explicit flags to avoid accidental microphone usage.
+
 ## License
 
 MIT

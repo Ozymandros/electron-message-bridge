@@ -150,10 +150,10 @@ describe('STTManager - coverage', () => {
 
   // ── stop() guard ──────────────────────────────────────────────────────────
 
-  it('should throw if stop called when not LISTENING', async () => {
+  it('should no-op if stop called when not LISTENING', async () => {
     const stt = new STTManager(options);
     (stt as unknown as { state: string }).state = 'IDLE';
-    await expect(stt.stop(mockWebContents, vi.fn())).rejects.toThrow(/no active recording/i);
+    await expect(stt.stop(mockWebContents, vi.fn())).resolves.toBeUndefined();
   });
 
   // ── abort() ───────────────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 {
   "name": "@ozymandros/electron-message-bridge-plugin-speech-whisper",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Optional Whisper.cpp STT plugin for @ozymandros/electron-message-bridge: mic capture + IPC bridge (main/preload).",
   "keywords": [
     "electron",
@@ -40,6 +40,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",
+    "test:integration-lite": "vitest run tests/stt-manager.integration-lite.test.ts",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json",

@@ -3,13 +3,19 @@ services:
     build:
       context: ./docker/mock-backend
     image: ozymandros/electron-message-bridge/mock-backend:local
-    container_name: ozymandros/electron-message-bridge-mock-backend
+    container_name: ozymandros-electron-message-bridge-mock-backend
     environment:
       PORT: 4010
     ports:
       - "4010:4010"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4010/health"]
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4010/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
       interval: 5s
       timeout: 2s
       retries: 10

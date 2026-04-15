@@ -130,7 +130,7 @@
     "check:all:coverage": "pnpm run check && pnpm run check:packages && pnpm run test:types && pnpm run test:coverage",
     "test": "pnpm run test:core && pnpm run test:adapters",
     "test:core": "vitest run tests",
-    "test:adapters": "pnpm -r --filter \"./packages/adapter-*\" run test",
+    "test:adapters": "vitest run tests/adapters && pnpm -r --filter \"./packages/adapter-*\" --filter \"./packages/plugin-*\" run test",
     "test:all": "pnpm -r run test",
     "test:api-surface": "vitest run tests/api-surface.test.ts",
     "test:integration": "vitest run tests/integration/mock-backend.integration.test.ts",

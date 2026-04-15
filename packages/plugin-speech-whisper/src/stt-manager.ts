@@ -206,9 +206,10 @@ export class STTManager {
       sampleRate: 16000,
       channels: 1,
       audioType: 'wav',
+      device: 'default', 
+      additionalParameters: ['-t', 'waveaudio'],
       ...(this.options.recorder !== undefined ? { recorder: this.options.recorder } : {}),
     });
-
     const stream = recording.stream();
     stream.on('error', (err: Error) => {
       this.lastError = err.message;
@@ -235,7 +236,8 @@ export class STTManager {
     send: (wc: WebContents, payload: SttResultPayload) => void,
   ): Promise<void> {
     if (this.state !== 'LISTENING' || !this.recordingSession) {
-      throw new Error('No active recording (call stt:start first).');
+      // Idempotent stop: callers may race or call stop twice.
+      return;
     }
 
     const { recording, outPath, fileStream, starter } = this.recordingSession;
